@@ -83,10 +83,10 @@ namespace cmdwtf.NumberStones.Random
 		private const uint _lowerMask = 0x7fffffff;
 
 		// the array for the state vector
-		private uint[] _mt = new uint[0];
+		private uint[] _mt = Array.Empty<uint>();
 		// mti==N+1 means mt[N] is not initialized
 		private ushort _mti;
-		private uint[] _mag01 = new uint[0];
+		private uint[] _mag01 = Array.Empty<uint>();
 
 		#region "Constructor"
 
@@ -147,7 +147,7 @@ namespace cmdwtf.NumberStones.Random
 			for (_mti = 1; _mti < _n; _mti++)
 			{
 				_mt[_mti] =
-					((uint)1812433253 * (_mt[_mti - 1] ^ (_mt[_mti - 1] >> 30)) + _mti);
+					(((uint)1812433253 * (_mt[_mti - 1] ^ (_mt[_mti - 1] >> 30))) + _mti);
 				// See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
 				// In the previous versions, MSBs of the seed affect
 				// only MSBs of the array mt[].
@@ -179,7 +179,9 @@ namespace cmdwtf.NumberStones.Random
 				if (i >= _n)
 				{ _mt[0] = _mt[_n - 1]; i = 1; }
 				if (j >= keyLength)
+				{
 					j = 0;
+				}
 			}
 			for (k = _n - 1; k > 0; k--)
 			{
@@ -205,7 +207,9 @@ namespace cmdwtf.NumberStones.Random
 				short kk;
 
 				if (_mti == _n + 1)   /* if InitializeBySeed() has not been called, */
+				{
 					InitializeBySeed(5489); /* a default initial seed is used */
+				}
 
 				for (kk = 0; kk < _n - _m; kk++)
 				{
@@ -243,41 +247,26 @@ namespace cmdwtf.NumberStones.Random
 		}
 
 		/* generates a random number on [0,0x7fffffff]-Interval */
-		internal uint GenerateInt31()
-		{
-			return (GenerateInt32() >> 1);
-		}
+		internal uint GenerateInt31() => (GenerateInt32() >> 1);
 
 		#endregion
 
 		#region Double Generation
 
 		/* generates a random number on [0,1]-real-Interval */
-		internal double GenerateDoubleExclusive()
-		{
-			return GenerateInt32() * ((double)1.0 / 4294967295.0);
-			/* divided by 2^32-1 */
-		}
+		internal double GenerateDoubleExclusive() => GenerateInt32() * ((double)1.0 / 4294967295.0);/* divided by 2^32-1 */
 
 		/* generates a random number on [0,1)-real-Interval */
-		internal double GenerateDoubleIncludeTop()
-		{
-			return GenerateInt32() * ((double)1.0 / 4294967296.0);
-			/* divided by 2^32 */
-		}
+		internal double GenerateDoubleIncludeTop() => GenerateInt32() * ((double)1.0 / 4294967296.0);/* divided by 2^32 */
 
 		/* generates a random number on (0,1)-real-Interval */
-		internal double GenerateDouble()
-		{
-			return (((double)GenerateInt32()) + 0.5) * ((double)1.0 / 4294967296.0);
-			/* divided by 2^32 */
-		}
+		internal double GenerateDouble() => (((double)GenerateInt32()) + 0.5) * ((double)1.0 / 4294967296.0);/* divided by 2^32 */
 
 		/* generates a random number on [0,1) with 53-bit resolution*/
 		internal double Generate53BitResult()
 		{
 			uint a = GenerateInt32() >> 5, b = GenerateInt32() >> 6;
-			return ((double)a * 67108864.0 + b) * ((double)1.0 / 9007199254740992.0);
+			return (((double)a * 67108864.0) + b) * ((double)1.0 / 9007199254740992.0);
 		}
 
 		/* These real versions are due to Isaku Wada, 2002/01/09 added */
@@ -286,15 +275,9 @@ namespace cmdwtf.NumberStones.Random
 
 		#region System.Random overrides
 
-		public override int Next()
-		{
-			return (int)GenerateInt32();
-		}
+		public override int Next() => (int)GenerateInt32();
 
-		public override int Next(int maxValue)
-		{
-			return (int)(Sample() * maxValue);
-		}
+		public override int Next(int maxValue) => (int)(Sample() * maxValue);
 
 		public override int Next(int minValue, int maxValue)
 		{
@@ -333,15 +316,9 @@ namespace cmdwtf.NumberStones.Random
 			}
 		}
 
-		public override double NextDouble()
-		{
-			return Sample();
-		}
+		public override double NextDouble() => Sample();
 
-		protected override double Sample()
-		{
-			return this.GenerateDoubleIncludeTop();
-		}
+		protected override double Sample() => GenerateDoubleIncludeTop();
 
 		#endregion System.Random overrides
 

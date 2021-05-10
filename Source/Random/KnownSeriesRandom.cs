@@ -47,10 +47,7 @@ namespace cmdwtf.NumberStones.Random
 		/// Thrown when the Next integer in the series for this generator is not between 0 and the specified maxValue inclusive
 		/// </exception>
 		/// <returns>The next integer in the series specified upon construction of this class</returns>
-		public int Next(int maxValue)
-		{
-			return Next(0, maxValue);
-		}
+		public int Next(int maxValue) => Next(0, maxValue);
 
 		/// <summary>
 		/// Return the first integer in the series that was specified when this generator was constructed,

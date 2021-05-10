@@ -8,18 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Tests\**" />
-    <EmbeddedResource Remove="Tests\**" />
-    <None Remove="Tests\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove=".editorconfig" />
-    <None Remove="LICENSE" />
-    <None Remove="Local.runsettings" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Superpower" Version="3.0.0-dev-00210" />
   </ItemGroup>
 

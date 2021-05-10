@@ -8,7 +8,7 @@ namespace cmdwtf.NumberStones.Tests
 		[DataTestMethod]
 		public void TestPasses()
 		{
-			var result = Dice.Roll("4d6");
+			decimal result = Dice.Roll("4d6");
 			System.Console.WriteLine($"Result: {result}");
 		}
 	}

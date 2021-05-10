@@ -45,10 +45,7 @@ namespace cmdwtf.NumberStones.Random
 		/// </summary>
 		/// <param name="maxValue">Inclusive maximum result</param>
 		/// <returns>Returns a Gaussian pseudo-random integer between 0 and the specified maxValue inclusive</returns>
-		public int Next(int maxValue)
-		{
-			return Next(0, maxValue);
-		}
+		public int Next(int maxValue) => Next(0, maxValue);
 
 		/// <summary>
 		/// Will approximately give the next random Gaussian integer between the specified min and max values inclusively
@@ -61,7 +58,7 @@ namespace cmdwtf.NumberStones.Random
 		{
 			_numberGenerated++;
 			double deviations = 3.5;
-			var r = (int)BoxMuller(minValue + ((maxValue - minValue) / 2.0), (maxValue - minValue) / 2.0 / deviations);
+			int r = (int)BoxMuller(minValue + ((maxValue - minValue) / 2.0), (maxValue - minValue) / 2.0 / deviations);
 			if (r > maxValue)
 			{
 				r = maxValue;
@@ -118,8 +115,8 @@ namespace cmdwtf.NumberStones.Random
 
 			_seed = state.Seed[0];
 			_random = new System.Random(_seed);
-			_numberGenerated = default(long);
-			_nextGaussian = default(double);
+			_numberGenerated = default;
+			_nextGaussian = default;
 			_useLast = true;
 			for (long i = 0; i < state.NumberGenerated; i++)
 			{
@@ -142,7 +139,7 @@ namespace cmdwtf.NumberStones.Random
 					v2 = (2.0 * _random.NextDouble()) - 1.0;
 					s = (v1 * v1) + (v2 * v2);
 				}
-				while (s >= 1.0 || s == 0);
+				while (s is >= 1.0 or 0);
 
 				s = Math.Sqrt(-2.0 * Math.Log(s) / s);
 
@@ -151,9 +148,6 @@ namespace cmdwtf.NumberStones.Random
 				return v1 * s;
 			}
 		}
-		private double BoxMuller(double mean, double standardDeviation)
-		{
-			return mean + (BoxMuller() * standardDeviation);
-		}
+		private double BoxMuller(double mean, double standardDeviation) => mean + (BoxMuller() * standardDeviation);
 	}
 }

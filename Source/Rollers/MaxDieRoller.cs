@@ -2,9 +2,6 @@
 {
 	public sealed class MaxDieRoller : IDieRoller
 	{
-		public int RollDie(int sides)
-		{
-			return sides;
-		}
+		public int RollDie(int sides) => sides;
 	}
 }

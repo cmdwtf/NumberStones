@@ -72,7 +72,7 @@ namespace cmdwtf.NumberStones.Random
 				throw new ArgumentException("Weight must be greater than 0", nameof(weight));
 			}
 
-			WeightedItem<T> weightedItem = new WeightedItem<T>(item, weight);
+			WeightedItem<T> weightedItem = new(item, weight);
 			_pool.Add(weightedItem);
 			if (int.MaxValue - weight < _totalWeight)
 			{

@@ -10,7 +10,7 @@ namespace cmdwtf.NumberStones.Random
 	{
 		private int _seed;
 		private long _numberGenerated;
-		private System.Random _random = new System.Random();
+		private System.Random _random = new();
 
 		/// <summary>
 		/// Constructs a new pseudo-random number generator
@@ -36,10 +36,7 @@ namespace cmdwtf.NumberStones.Random
 		/// </summary>
 		/// <param name="maxValue">Inclusive maximum result</param>
 		/// <returns>Returns a pseudo-random integer between 0 and the specified maxValue inclusive</returns>
-		public int Next(int maxValue)
-		{
-			return Next(0, maxValue);
-		}
+		public int Next(int maxValue) => Next(0, maxValue);
 
 		/// <summary>
 		/// Gets the next pseudo-random integer between the specified minValue and maxValue inclusive
