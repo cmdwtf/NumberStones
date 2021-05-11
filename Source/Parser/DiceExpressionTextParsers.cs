@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 
+using cmdwtf.NumberStones.Expression;
+
 using Superpower;
 using Superpower.Parsers;
 
@@ -15,6 +17,7 @@ namespace cmdwtf.NumberStones.Parser
 		public const string DiceOptionSuccess = "sS";
 		public const string DiceOptionFail = "fF";
 		public const string DiceOptionFudge = "fF";
+		public const string DiceOptionCountTwice = "tT";
 		public const string DiceOptionExploding = "!";
 		public const string DiceOptionGreaterThan = ">";
 		public const string DiceOptionLessThan = "<";
@@ -37,6 +40,7 @@ namespace cmdwtf.NumberStones.Parser
 			+ DiceOptionSuccess
 			+ DiceOptionFail
 			+ DiceOptionFudge
+			+ DiceOptionCountTwice
 			+ DiceOptionExploding
 			+ DiceOptionGreaterThan
 			+ DiceOptionLessThan
@@ -47,10 +51,29 @@ namespace cmdwtf.NumberStones.Parser
 		public static char[] DiceOptionChars { get; } =
 			DiceOptionString.AsQueryable().Distinct().ToArray();
 
-		public static TextParser<char> DiceSeperator { get; } =
+		public static TextParser<char> DiceSeperatorCharacter { get; } =
 			Character.In('d', 'D');
 
-		public static TextParser<char> DiceOptions { get; } =
+		public static TextParser<char> DiceOptionCharacter { get; } =
 			Character.In(DiceOptionChars);
+
+
+		public static TextParser<IExpression> DiceTerm { get; } =
+			from multiplicity in Span.MatchedBy(Numerics.Decimal)
+				.Apply(Numerics.DecimalDecimal)
+			from sides in DiceSeperatorCharacter.IgnoreThen(
+					Span.MatchedBy(Numerics.Decimal)
+				)
+				.Apply(Numerics.DecimalDecimal)
+			from options in Character.AnyChar.Many() // everything else is an option.
+			select new DiceTerm(new DiceSettings(sides, multiplicity)
+			{
+				Options = new string(options)
+			}) as IExpression;
+
+		public static TextParser<IExpression> ConstantTerm { get; } =
+			from value in Span.MatchedBy(Numerics.Decimal)
+				.Apply(Numerics.DecimalDecimal)
+			select new ConstantTerm(value) as IExpression;
 	}
 }

@@ -13,20 +13,27 @@ namespace cmdwtf.NumberStones.Expression
 	/// </remarks>
 	public record DiceTerm : Term
 	{
+		public DiceSettings Settings { get; init; }
+
 		/// <summary>
 		/// The number of dice
 		/// </summary>
-		public int Multiplicity { get; private init; }
+		public int Multiplicity => Settings.Multiplicity;
 
 		/// <summary>
 		/// The number of sides per die
 		/// </summary>
-		public int Sides { get; private init; }
+		public int Sides => Settings.Sides;
 
 		/// <summary>
 		/// Sum this many dice with the highest values out of those rolled
 		/// </summary>
-		protected int Keep { get; private init; }
+		public int Keep => Settings.Sides - Settings.Drop;
+
+		/// <summary>
+		/// Sum all but this many dice with the highest values out of those rolled
+		/// </summary>
+		public int Drop => Settings.Drop;
 
 		/// <summary>
 		/// Construct a new instance of the DiceTerm class using the specified values
@@ -35,7 +42,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// <param name="sides">The number of sides per die</param>
 		/// <param name="scalar">The amount to multiply the final sum of the dice by</param>
 		public DiceTerm(int multiplicity, int sides)
-		   : this(multiplicity, sides, multiplicity)
+		   : this(sides, multiplicity, multiplicity)
 		{ }
 
 		/// <summary>
@@ -43,9 +50,9 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="multiplicity">The number of dice</param>
 		/// <param name="sides">The number of sides per die</param>
-		/// <param name="choose">Sum this many dice with the highest values out of those rolled</param>
+		/// <param name="drop">The number of dice with the lowest values to drop when summing.</param>
 		/// <param name="scalar">The amount to multiply the final sum of the dice by</param>
-		public DiceTerm(int multiplicity, int sides, int choose)
+		public DiceTerm(int sides, int multiplicity, int drop)
 		{
 			if (sides <= 0)
 			{
@@ -55,18 +62,25 @@ namespace cmdwtf.NumberStones.Expression
 			{
 				throw new InvalidMultiplicityException($"Cannot roll {multiplicity} dice; this quantity is less than 0");
 			}
-			if (choose < 0)
+			if (drop < 0)
 			{
-				throw new InvalidKeepException("Cannot choose {0} of the dice; it is less than 0");
+				throw new InvalidOptionException("Cannot drop {0} of the dice; it is less than 0");
 			}
-			if (choose > multiplicity)
+			if (drop > multiplicity)
 			{
-				throw new InvalidKeepException($"Cannot choose {choose} dice, only {multiplicity} were rolled");
+				throw new InvalidOptionException($"Cannot choose {drop} dice, only {multiplicity} were rolled");
 			}
 
-			Sides = sides;
-			Multiplicity = multiplicity;
-			Keep = choose;
+			Settings = new(sides, multiplicity, drop);
+		}
+
+		/// <summary>
+		/// Construct a new instance of the DiceTerm class using the specified option values
+		/// </summary>
+		/// <param name="options">The specific options to use</param>
+		public DiceTerm(DiceSettings options)
+		{
+			Settings = options;
 		}
 
 		/// <summary>
@@ -84,18 +98,19 @@ namespace cmdwtf.NumberStones.Expression
 				};
 			}
 
-			IEnumerable<ExpressionResult> rolls =
+			List<ExpressionResult> results = new();
+
+			results.AddRange(
 				from i in Enumerable.Range(0, Multiplicity)
-				select new ExpressionResult
+				select new ExpressionResult()
 				{
 					Value = Roller.RollDie(Sides),
 					TermType = "d" + Sides
-				};
+				});
 
-			// #keep
-			//IEnumerable<TermResult> kept = rolls.OrderByDescending(d => d.Value).Take(Keep);
+			// # apply settings
 
-			return new MultipleTermResult(rolls)
+			return new MultipleTermResult(results)
 			{
 				TermType = $"{Multiplicity}d{Sides}"
 			};

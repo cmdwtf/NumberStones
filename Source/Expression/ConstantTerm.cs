@@ -8,7 +8,7 @@ namespace cmdwtf.NumberStones.Expression
 	/// <remarks>
 	/// In the expression "2d6+5" the integer "5" is a ConstantTerm
 	/// </remarks>
-	public record ConstantTerm(int Constant) : Term
+	public record ConstantTerm(decimal Constant) : Term
 	{
 		/// <summary>
 		/// Gets the TermResult for this ConstantTerm which will always be a single result with a value of the constant.

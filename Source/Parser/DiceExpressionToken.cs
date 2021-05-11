@@ -4,7 +4,7 @@ using static cmdwtf.NumberStones.Parser.DiceExpressionTokenConstants;
 
 namespace cmdwtf.NumberStones.Parser
 {
-	public enum DiceExpressionToken
+	internal enum DiceExpressionToken
 	{
 		[Token(Category = Categories.Unknown)]
 		None = 0,
@@ -24,13 +24,13 @@ namespace cmdwtf.NumberStones.Parser
 		Multiply,
 		[Token(Category = Categories.Operator, Example = DivideOperatorString)]
 		Divide,
+		[Token(Category = Categories.Operator, Example = ModuloOperatorString)]
+		Modulo,
+
 		[Token(Category = Categories.Operator, Example = AddOperatorString)]
 		Add,
 		[Token(Category = Categories.Operator, Example = SubtractOperatorString)]
 		Subtract,
-
-		[Token(Category = Categories.Operator, Example = ModuloOperatorString)]
-		Modulo,
 
 		[Token(Category = Categories.Other, Example = OpenCommentString)]
 		Comment,

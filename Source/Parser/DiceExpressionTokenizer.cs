@@ -11,17 +11,17 @@ using static cmdwtf.NumberStones.Parser.DiceExpressionTokenConstants;
 
 namespace cmdwtf.NumberStones.Parser
 {
-	public class DiceExpressionTokenizer
+	// #doc
+	internal class DiceExpressionTokenizer
 	{
 		private static TextParser<Unit> DiceToken { get; } =
-			from first in Character.Digit.Or(DiceSeperator).IgnoreMany()
-			from rest in Character.Digit.Or(DiceOptions).IgnoreMany()
+			from first in Character.Digit.Or(DiceSeperatorCharacter).IgnoreMany()
+			from rest in Character.Digit.Or(DiceOptionCharacter).IgnoreMany()
 			select Unit.Value;
 
 		private static TextParser<Unit> DiceNumberToken { get; } =
-			from sign in Character.EqualTo('-').OptionalOrDefault()
 			from first in Character.Digit
-			from rest in Character.Digit.Or(Character.In('.', 'e', 'E', '+', '-')).IgnoreMany()
+			from rest in Character.Digit.Or(Character.In('.')).IgnoreMany()
 			select Unit.Value;
 
 		public static Tokenizer<DiceExpressionToken> Instance { get; } =
