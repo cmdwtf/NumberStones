@@ -106,42 +106,96 @@ namespace cmdwtf.NumberStones
 			return result;
 		}
 
+		#region Fluent Operations
 
-		// #doc
+		/// <inheritdoc cref="Plus(IExpression)"/>
 		public DiceExpression Plus(decimal value)
 			=> Plus(new ConstantTerm(value));
+
+		/// <inheritdoc cref="Minus(IExpression)"/>
 		public DiceExpression Minus(decimal value)
 			=> Minus(new ConstantTerm(value));
+
+		/// <inheritdoc cref="Times(IExpression)"/>
 		public DiceExpression Times(decimal value)
 			=> Times(new ConstantTerm(value));
+
+		/// <inheritdoc cref="DividedBy(IExpression)"/>
 		public DiceExpression DividedBy(decimal value)
 			=> DividedBy(new ConstantTerm(value));
+
+		/// <inheritdoc cref="Modulo(IExpression)"/>
 		public DiceExpression Modulo(decimal value)
 			=> Modulo(new ConstantTerm(value));
 
+		/// <inheritdoc cref="Plus(IExpression)"/>
 		public DiceExpression Plus(DiceTerm value)
 			=> Plus(value);
+
+		/// <inheritdoc cref="Minus(IExpression)"/>
 		public DiceExpression Minus(DiceTerm value)
 			=> Minus(value);
+
+		/// <inheritdoc cref="Times(IExpression)"/>
 		public DiceExpression Times(DiceTerm value)
 			=> Times(value);
+
+		/// <inheritdoc cref="DividedBy(IExpression)"/>
 		public DiceExpression DividedBy(DiceTerm value)
 			=> DividedBy(value);
+
+		/// <inheritdoc cref="Modulo(IExpression)"/>
 		public DiceExpression Modulo(DiceTerm value)
 			=> Modulo(value);
 
+		/// <summary>
+		/// Adds an addition operation with the given operand
+		/// </summary>
+		/// <param name="operand">The operand to add</param>
+		/// <returns>This expression</returns>
 		private DiceExpression Plus(IExpression operand)
 			=> AddExpression(BinaryOperation.Add, operand);
+
+		/// <summary>
+		/// Adds a subtraction operation with the given operand
+		/// </summary>
+		/// <param name="operand">The operand to subtract</param>
+		/// <returns>This expression</returns>
 		private DiceExpression Minus(IExpression operand)
 			=> AddExpression(BinaryOperation.Subtract, operand);
+
+		/// <summary>
+		/// Adds a multiply operation with the given operand
+		/// </summary>
+		/// <param name="operand">The operand to multiply against</param>
+		/// <returns>This expression</returns>
 		private DiceExpression Times(IExpression operand)
 			=> AddExpression(BinaryOperation.Multiply, operand);
+
+		/// <summary>
+		/// Adds a divide operation with the given operand
+		/// </summary>
+		/// <param name="operand">The operand to divide by</param>
+		/// <returns>This expression</returns>
 		private DiceExpression DividedBy(IExpression operand)
 			=> AddExpression(BinaryOperation.Divide, operand);
+
+		/// <summary>
+		/// Adds a modulo operation with the given operand
+		/// </summary>
+		/// <param name="operand">The operand to modulo by</param>
+		/// <returns>This expression</returns>
 		private DiceExpression Modulo(IExpression operand)
 			=> AddExpression(BinaryOperation.Modulo, operand);
 
-		// #move
+		#endregion Fluent Operations
+
+		/// <summary>
+		/// Adds a binary operation expression to this expression.
+		/// </summary>
+		/// <param name="binaryOperation">The operation to add</param>
+		/// <param name="operand">The term to add on the other side of the binary operation</param>
+		/// <returns>This expression</returns>
 		private DiceExpression AddExpression(Func<IExpression, IExpression, IOperation> binaryOperation, IExpression operand)
 		{
 			_expression = binaryOperation(_expression, operand);

@@ -12,9 +12,6 @@ namespace cmdwtf.NumberStones.Parser
 	{
 		public const char DiceSeperator = 'd';
 
-		// #creep: penetrating - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-PenetratingDice(B,F)!pCP
-		// #creep: matching - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-DiceMatchingmt
-		// #creep: reroll - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-RerollingDice(B,F)rCP
 		// #creep: sort - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-SortingDice(B,F)sa/sd
 		// #creep: group - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-GroupedRolls
 

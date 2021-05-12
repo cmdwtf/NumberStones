@@ -26,7 +26,7 @@ namespace cmdwtf.NumberStones
 		public static DiceExpression Single(int sides)
 			=> DiceExpression.Dice(sides, 1);
 
-		private static readonly IDiceParser _diceParser = new DiceParser();
+		private static readonly IDiceExpressionParser _diceParser = new DiceExpressionParser();
 
 		/// <summary>
 		/// Parse the specified string into a DiceExpression.

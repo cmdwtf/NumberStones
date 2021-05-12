@@ -11,7 +11,6 @@
 			public const string Other = "other";
 		}
 
-		// #cleanup
 		internal const char _openBracket = '[';
 		public const string OpenBracket = "[";
 		internal const char _closeBracket = ']';
@@ -34,10 +33,6 @@
 		public const string Percent = "%";
 		internal const char _octothorpe = '#';
 		public const string Octothorpe = "#";
-		internal const char _carriageReturn = '\r';
-		public const string CarriageReturn = "\r";
-		internal const char _lineFeed = '\n';
-		public const string LineFeed = "\n";
 
 		// brackets
 		public const char OpenSubExpression = _openParentheses;

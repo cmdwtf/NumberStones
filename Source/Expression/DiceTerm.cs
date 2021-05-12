@@ -29,12 +29,12 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// Sum this many dice with the highest values out of those rolled
 		/// </summary>
-		//public int Keep => Settings.Sides - Settings.Drop; #bringback
+		public int Keep => Settings.Sides - Settings.Drop;
 
 		/// <summary>
 		/// Sum all but this many dice with the highest values out of those rolled
 		/// </summary>
-		//public int Drop => Settings.Drop;
+		public int Drop => Settings.Drop;
 
 		/// <summary>
 		/// Construct a new instance of the DiceTerm class using the specified values

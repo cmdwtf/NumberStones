@@ -18,7 +18,7 @@ namespace cmdwtf.NumberStones.Parser
 		[Token(Category = Categories.Bracket, Example = CloseSubExpressionString)]
 		ParenthesisRight,
 
-		// Exponent,	// #maybe (repeat?)
+		// Exponent,	// #exponent
 
 		[Token(Category = Categories.Operator, Example = MultiplyOperatorString)]
 		Multiply,

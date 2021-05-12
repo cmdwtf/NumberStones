@@ -32,6 +32,11 @@ namespace cmdwtf.NumberStones
 		public int Multiplicity => (int)Math.Truncate(MultiplicityReal);
 
 		/// <summary>
+		/// An integer value of how many dice results should be dropped.
+		/// </summary>
+		public int Drop => (int)_options.OfType<Drop>().Sum(d => d.Value);
+
+		/// <summary>
 		/// The number of sides for the dice, specifically adjusted for unique types.
 		/// </summary>
 		private decimal ModeSides => Kind switch
