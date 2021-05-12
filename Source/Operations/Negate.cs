@@ -5,7 +5,7 @@ namespace cmdwtf.NumberStones.Operations
 {
 	public partial class UnaryOperations
 	{
-		public static ExpressionResult Negative(IExpression operand)
+		public static ExpressionResult Negate(IExpression operand)
 		{
 			ExpressionResult operandResult = operand.Evaluate();
 

@@ -6,6 +6,7 @@ using Superpower;
 using Superpower.Parsers;
 
 using static cmdwtf.NumberStones.Expression.BinaryOperation;
+using static cmdwtf.NumberStones.Expression.UnaryOperation;
 
 namespace cmdwtf.NumberStones.Parser
 {
@@ -13,6 +14,9 @@ namespace cmdwtf.NumberStones.Parser
 	internal static class DiceExpressionParsers
 	{
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Operator(DiceExpressionToken op, BinaryOperationCreationDelegate opType)
+			=> Token.EqualTo(op).Value(opType);
+
+		private static TokenListParser<DiceExpressionToken, UnaryOperationCreationDelegate> Operator(DiceExpressionToken op, UnaryOperationCreationDelegate opType)
 			=> Token.EqualTo(op).Value(opType);
 
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Add { get; } =
@@ -25,12 +29,22 @@ namespace cmdwtf.NumberStones.Parser
 			Operator(DiceExpressionToken.Divide, BinaryOperation.Divide);
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Modulo { get; } =
 			Operator(DiceExpressionToken.Modulo, BinaryOperation.Modulo);
+		private static TokenListParser<DiceExpressionToken, IExpression> Negate { get; } =
+			from operation in Operator(DiceExpressionToken.Subtract, UnaryOperation.Negate)
+			from term in Term ?? throw new ParseException($"{nameof(Term)} parser null.")
+			select operation(term) as IExpression;
 
 		private static TokenListParser<DiceExpressionToken, IExpression> SubExpression { get; } =
 			from open in Token.EqualTo(DiceExpressionToken.ParenthesisLeft)
-			from expr in Parse.Ref(() => AddSubtract ?? throw new ParseException("Expression parser null."))
+			from expr in Parse.Ref(() => AddSubtract ?? throw new ParseException($"{nameof(AddSubtract)} parser null."))
 			from close in Token.EqualTo(DiceExpressionToken.ParenthesisRight)
 			select expr as IExpression;
+
+		private static TokenListParser<DiceExpressionToken, IExpression> Constant { get; } =
+			from result in Token.EqualTo(DiceExpressionToken.Constant)
+					.Apply(DiceExpressionTextParsers.ConstantTerm)
+			select result;
+
 
 		private static TokenListParser<DiceExpressionToken, IExpression> Term { get; } =
 			from result in Parse.OneOf(
@@ -38,19 +52,21 @@ namespace cmdwtf.NumberStones.Parser
 				Token.EqualTo(DiceExpressionToken.Dice)
 					.Apply(DiceExpressionTextParsers.DiceTerm)
 					.Try(),
-				Token.EqualTo(DiceExpressionToken.Constant)
-					.Apply(DiceExpressionTextParsers.ConstantTerm)
+				Negate.Or(Constant)
 				)
 			select result;
 
-		private static IExpression MakeBinary(BinaryOperationCreationDelegate op, IExpression left, IExpression right)
+		private static IExpression MakeOperation(BinaryOperationCreationDelegate op, IExpression left, IExpression right)
 			=> op(left, right);
 
+		private static IExpression MakeOperation(UnaryOperationCreationDelegate op, IExpression operand)
+			=> op(operand);
+
 		private static TokenListParser<DiceExpressionToken, IExpression> MultiplyDivide { get; } =
-			Parse.Chain(Multiply.Or(Divide).Or(Modulo), Term, MakeBinary);
+			Parse.Chain(Multiply.Or(Divide).Or(Modulo), Term, MakeOperation);
 
 		private static TokenListParser<DiceExpressionToken, IExpression> AddSubtract { get; } =
-			Parse.Chain(Add.Or(Subtract), MultiplyDivide, MakeBinary);
+			Parse.Chain(Add.Or(Subtract), MultiplyDivide, MakeOperation);
 
 		internal static TokenListParser<DiceExpressionToken, DiceExpression> Expression { get; } =
 			from expr in AddSubtract.AtEnd()

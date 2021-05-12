@@ -14,7 +14,7 @@ namespace cmdwtf.NumberStones.Expression
 
 		public override string ToString() => $"{Symbol}{Operand}";
 
-		public static UnaryOperation Negative(IExpression operand) => new(operand, UnaryOperations.Negative, '-');
+		public static UnaryOperation Negate(IExpression operand) => new(operand, UnaryOperations.Negate, '-');
 
 		public delegate UnaryOperation UnaryOperationCreationDelegate(IExpression operand);
 	}
