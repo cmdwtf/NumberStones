@@ -1,9 +1,19 @@
 ﻿namespace cmdwtf.NumberStones.Expression
 {
-	// #doc
+	/// <summary>
+	/// An expression with no value.
+	/// </summary>
 	public record EmptyExpression : IExpression
 	{
-		public ExpressionResult Evaluate() => new() { Value = 0, TermType = "?" };
+		/// <summary>
+		/// Evaluates the empty expression, returning, as you may expect: an empty expression result.
+		/// </summary>
+		/// <returns></returns>
+		public ExpressionResult Evaluate() => ExpressionResult.Empty;
+
+		/// <summary>
+		/// An instance to easily access an empty expression
+		/// </summary>
 		public static EmptyExpression Instance { get; } = new EmptyExpression();
 	}
 }

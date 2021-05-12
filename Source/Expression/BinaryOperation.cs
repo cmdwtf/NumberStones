@@ -21,7 +21,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// Returns a string representing this operation
 		/// </summary>
-		/// <returns>A strign representing this operation</returns>
+		/// <returns>A string representing this operation</returns>
 		public override string ToString() => $"{LeftOperand} {Symbol} {RightOperand}";
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="left">The term to the left of the operator</param>
 		/// <param name="right">The term to the right of the operator</param>
-		/// <returns>A new operation representing the chosen terms</returns>
+		/// <returns>A new operation representing the action on the chosen terms</returns>
 		public static BinaryOperation Add(IExpression left, IExpression right) => new(left, right, BinaryOperations.Add, '+');
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="left">The term to the left of the operator</param>
 		/// <param name="right">The term to the right of the operator</param>
-		/// <returns>A new operation representing the chosen terms</returns>
+		/// <returns>A new operation representing the action on the chosen terms</returns>
 		public static BinaryOperation Subtract(IExpression left, IExpression right) => new(left, right, BinaryOperations.Subtract, '-');
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="left">The term to the left of the operator</param>
 		/// <param name="right">The term to the right of the operator</param>
-		/// <returns>A new operation representing the chosen terms</returns>
+		/// <returns>A new operation representing the action on the chosen terms</returns>
 		public static BinaryOperation Multiply(IExpression left, IExpression right) => new(left, right, BinaryOperations.Multiply, '*');
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="left">The term to the left of the operator</param>
 		/// <param name="right">The term to the right of the operator</param>
-		/// <returns>A new operation representing the chosen terms</returns>
+		/// <returns>A new operation representing the action on the chosen terms</returns>
 		public static BinaryOperation Divide(IExpression left, IExpression right) => new(left, right, BinaryOperations.Divide, '/');
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="left">The term to the left of the operator</param>
 		/// <param name="right">The term to the right of the operator</param>
-		/// <returns>A new operation representing the chosen terms</returns>
+		/// <returns>A new operation representing the action on the chosen terms</returns>
 		public static BinaryOperation Modulo(IExpression left, IExpression right) => new(left, right, BinaryOperations.Modulo, '%');
 
 		/// <summary>
@@ -69,9 +69,15 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		/// <param name="left">The term to the left of the operator</param>
 		/// <param name="right">The term to the right of the operator</param>
-		/// <returns>A new operation representing the chosen terms</returns>
+		/// <returns>A new operation representing the action on the chosen terms</returns>
 		public static BinaryOperation Power(IExpression left, IExpression right) => new(left, right, BinaryOperations.Power, '^');
 
+		/// <summary>
+		/// A delegate for the shortcut creation methods
+		/// </summary>
+		/// <param name="left">The operand to the left of the operator the operation should act on</param>
+		/// <param name="right">The operand to the right of the operator the operation should act on</param>
+		/// <returns>The operation representing the action on the chosen terms</returns>
 		public delegate BinaryOperation BinaryOperationCreationDelegate(IExpression left, IExpression right);
 	}
 }

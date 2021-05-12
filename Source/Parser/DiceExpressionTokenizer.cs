@@ -11,8 +11,10 @@ using static cmdwtf.NumberStones.Parser.DiceExpressionTokenConstants;
 
 namespace cmdwtf.NumberStones.Parser
 {
-	// #doc
-	internal class DiceExpressionTokenizer
+	/// <summary>
+	/// A class containing the logic to break a dice expression string into tokens to then be parsed.
+	/// </summary>
+	internal static class DiceExpressionTokenizer
 	{
 		private static TextParser<Unit> Dice { get; } =
 			from first in Character.Digit.Or(DiceSeperatorCharacter).AtLeastOnce()
@@ -23,6 +25,9 @@ namespace cmdwtf.NumberStones.Parser
 				).IgnoreMany()
 			select Unit.Value;
 
+		/// <summary>
+		/// The tokenizer instance
+		/// </summary>
 		public static Tokenizer<DiceExpressionToken> Instance { get; } =
 			new TokenizerBuilder<DiceExpressionToken>()
 				.Ignore(Span.WhiteSpace)

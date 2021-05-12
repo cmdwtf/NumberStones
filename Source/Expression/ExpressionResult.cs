@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The total for this term
 		/// </summary>
-		public decimal Value { get; init; }
+		public decimal Value { get; init; } = 0m;
 
 		/// <summary>
 		/// A string representing the type of this Term. Possible values are "constant" or "d(sides)"
@@ -16,6 +16,15 @@
 		/// </summary>
 		public string TermType { get; init; } = string.Empty;
 
+		/// <summary>
+		/// Returns a string representing this expression result
+		/// </summary>
+		/// <returns>A string representing this expression result</returns>
 		public override string ToString() => $"{Value} ({TermType})";
+
+		/// <summary>
+		/// An empty expression result
+		/// </summary>
+		public static ExpressionResult Empty { get; } = new() { TermType = "?" };
 	}
 }
