@@ -18,23 +18,25 @@ namespace cmdwtf.NumberStones.Options
 
 		public override IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
 		{
-			if (Value == 0)
+			decimal target = Value;
+
+			if (target == 0)
 			{
-				return input;
+				target = input.First().Sides;
 			}
 
 			return input.SelectMany(r =>
 			{
-				if (ModeComparison(Value, r.Value))
+				if (ModeComparison(target, r.Value))
 				{
-					return ExplodeRoll(r, roller);
+					return ExplodeRoll(target, r, roller);
 				}
 
 				return new[] { r };
 			});
 		}
 
-		private IEnumerable<DiceExpressionResult> ExplodeRoll(DiceExpressionResult r, IDieRoller roller)
+		private IEnumerable<DiceExpressionResult> ExplodeRoll(decimal target, DiceExpressionResult r, IDieRoller roller)
 		{
 			List<DiceExpressionResult> explodedResults = new List<DiceExpressionResult>();
 
@@ -63,7 +65,7 @@ namespace cmdwtf.NumberStones.Options
 					};
 				}
 			}
-			while (explodedRoll == sides);
+			while (ModeComparison(explodedRoll, target));
 
 			if (Type == ExplodingDiceMode.Compound)
 			{
@@ -78,11 +80,6 @@ namespace cmdwtf.NumberStones.Options
 
 		public override void BuildOptionString(StringBuilder builder)
 		{
-			if (Value == 0)
-			{
-				return;
-			}
-
 			string explodeString = Type switch
 			{
 				ExplodingDiceMode.None => throw new InvalidOptionException($"Invalid {nameof(ExplodingDiceMode)}: {Type}"),
@@ -92,9 +89,12 @@ namespace cmdwtf.NumberStones.Options
 				_ => throw new InvalidOptionException($"Unhandled {nameof(ExplodingDiceMode)}: {Type}"),
 			};
 
-			string comparison = ModeOptionString == "=" ? "" : ModeOptionString;
+			builder.Append($"{explodeString}");
 
-			builder.Append($"{explodeString}{comparison}{Value}");
+			if (Value != 0 && Mode != ComparisonDiceMode.GreaterThanEquals)
+			{
+				builder.Append($"{ModeOptionString}{Value}");
+			}
 		}
 	}
 }

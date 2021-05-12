@@ -48,9 +48,9 @@ namespace cmdwtf.NumberStones
 		/// </summary>
 		public string SidesString => Kind switch
 		{
-			DiceType.Coin => DiceTextParsers.CoinSide,
-			DiceType.Fate => DiceTextParsers.FateSide,
-			DiceType.Planechase => DiceTextParsers.PlanechaseSide,
+			DiceType.Coin => DiceTermTextParsers.CoinSide,
+			DiceType.Fate => DiceTermTextParsers.FateSide,
+			DiceType.Planechase => DiceTermTextParsers.PlanechaseSide,
 			_ => SidesReal.ToString(),
 		};
 
@@ -82,7 +82,7 @@ namespace cmdwtf.NumberStones
 					return;
 				}
 
-				Result<IDiceOption[]> result = DiceTextParsers.DiceOptions.Invoke(new TextSpan(value));
+				Result<IDiceOption[]> result = DiceTermTextParsers.DiceOptions.Invoke(new TextSpan(value));
 
 				if (result.HasValue)
 				{

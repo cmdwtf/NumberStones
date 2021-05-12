@@ -48,13 +48,13 @@ namespace cmdwtf.NumberStones.Parser
 
 		public static TextParser<Unit> DiceInlineLabel { get; } =
 			from open in Character.EqualTo(DiceExpressionTokenConstants.OpenLabel)
-			from content in Character.ExceptIn(DiceExpressionTokenConstants.CloseLabel)
+			from content in Character.ExceptIn(DiceExpressionTokenConstants.CloseLabel).Many()
 			from close in Character.EqualTo(DiceExpressionTokenConstants.CloseLabel)
 			select Unit.Value;
 
 
 		public static TextParser<IExpression> DiceTerm { get; } =
-			from term in DiceTextParsers.DiceTerm
+			from term in DiceTermTextParsers.DiceTerm
 			select term as IExpression;
 
 		public static TextParser<IExpression> ConstantTerm { get; } =

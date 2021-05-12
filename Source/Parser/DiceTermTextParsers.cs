@@ -7,7 +7,7 @@ using Superpower.Parsers;
 
 namespace cmdwtf.NumberStones.Parser
 {
-	internal static class DiceTextParsers
+	internal static class DiceTermTextParsers
 	{
 		public const string CoinSide = "C";
 		public const string FateSide = "F";
@@ -26,14 +26,14 @@ namespace cmdwtf.NumberStones.Parser
 			select sides;
 
 		private static TextParser<CriticalTypeMode> CriticalType { get; } =
-			from mode in Character.EqualToIgnoreCase(Critical.SymbolSuccess)
-				.Value(CriticalTypeMode.Success)
-				.Or(Character.EqualToIgnoreCase(Critical.SymbolFailure)
-					.Value(CriticalTypeMode.Failure)
-				)
+			from mode in Parse.OneOf(
+				Character.EqualToIgnoreCase(Critical.SymbolSuccess)
+				.Value(CriticalTypeMode.Success),
+				Character.EqualToIgnoreCase(Critical.SymbolFailure)
+				.Value(CriticalTypeMode.Failure))
 			select mode;
 
-		private static TextParser<HighLowMode> HighOrLowMode { get; } =
+		private static TextParser<HighLowMode> HighLowType { get; } =
 			from mode in Parse.OneOf(
 				Character.EqualToIgnoreCase(Keep.SymbolHigh)
 				.Value(HighLowMode.High),
@@ -42,10 +42,13 @@ namespace cmdwtf.NumberStones.Parser
 			select mode;
 
 		private static TextParser<ExplodingDiceMode> ExplodingType { get; } =
-			from mode in Character.EqualToIgnoreCase(Exploding.SymbolPenetrating)
-				.Value(ExplodingDiceMode.Penetrating)
-				.Or(Character.EqualToIgnoreCase(Exploding.SymbolCompound)
-					.Value(ExplodingDiceMode.Compound)
+			from mode in Parse.OneOf(
+				Character.EqualToIgnoreCase(Exploding.SymbolPenetrating)
+				.Try()
+				.Value(ExplodingDiceMode.Penetrating),
+				Character.EqualToIgnoreCase(Exploding.SymbolCompound)
+				.Try()
+				.Value(ExplodingDiceMode.Compound)
 				).OptionalOrDefault(ExplodingDiceMode.Classic)
 			select mode;
 
@@ -53,8 +56,10 @@ namespace cmdwtf.NumberStones.Parser
 		private static TextParser<ComparisonDiceMode> ComparisonMode { get; } =
 			from mode in Parse.OneOf(
 					Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
+					.Try()
 					.Value(ComparisonDiceMode.Equals),
 					Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolGreater)
+					.Try()
 					.IgnoreThen(
 						Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
 						.Try()
@@ -62,6 +67,7 @@ namespace cmdwtf.NumberStones.Parser
 						.OptionalOrDefault(ComparisonDiceMode.GreaterThan)
 					),
 					Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolLess)
+					.Try()
 					.IgnoreThen(
 						Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
 						.Try()
@@ -69,11 +75,13 @@ namespace cmdwtf.NumberStones.Parser
 						.OptionalOrDefault(ComparisonDiceMode.LessThan)
 					),
 					Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolNot)
+					.Try()
 					.IgnoreThen(
 						Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
+						.Try()
 						.Value(ComparisonDiceMode.Not)
 					)
-				).OptionalOrDefault(ComparisonDiceMode.None)
+				)
 			select mode;
 
 		private static TextParser<IDiceOption> CriticalOption { get; } =
@@ -85,7 +93,7 @@ namespace cmdwtf.NumberStones.Parser
 
 		private static TextParser<IDiceOption> DropOption { get; } =
 			from key in Character.EqualToIgnoreCase(Drop.Symbol)
-			from mode in HighOrLowMode.Try()
+			from mode in HighLowType.Try()
 				.OptionalOrDefault(HighLowMode.Low)
 			from val in Numerics.DecimalDecimal.OptionalOrDefault(1m)
 			select new Drop(val, mode) as IDiceOption;
@@ -93,13 +101,13 @@ namespace cmdwtf.NumberStones.Parser
 		private static TextParser<IDiceOption> ExplodingOption { get; } =
 			from key in Character.EqualToIgnoreCase(Exploding.Symbol)
 			from type in ExplodingType
-			from val in Numerics.DecimalDecimal
-			from mode in ComparisonMode
+			from mode in ComparisonMode.OptionalOrDefault(ComparisonDiceMode.GreaterThanEquals)
+			from val in Numerics.DecimalDecimal.OptionalOrDefault(0m)
 			select new Exploding(val, type, mode) as IDiceOption;
 
 		private static TextParser<IDiceOption> KeepOption { get; } =
 			from key in Character.EqualToIgnoreCase(Keep.Symbol)
-			from mode in HighOrLowMode.Try()
+			from mode in HighLowType.Try()
 				.OptionalOrDefault(HighLowMode.High)
 			from val in Numerics.DecimalDecimal.OptionalOrDefault(1m)
 			select new Keep(val, mode) as IDiceOption;
