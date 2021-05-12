@@ -55,7 +55,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// <param name="scalar">The amount to multiply the final sum of the dice by</param>
 		public DiceTerm(int sides, int multiplicity, int drop)
 		{
-			if (sides <= 0)
+			if (sides < 0)
 			{
 				throw new ImpossibleDieException($"Cannot construct a die with {sides} sides");
 			}
@@ -93,9 +93,17 @@ namespace cmdwtf.NumberStones.Expression
 		/// <returns>An IEnumerable of TermResult which will have one item per die rolled</returns>
 		public override ExpressionResult Evaluate()
 		{
-			if (Multiplicity == 1)
+			if (Multiplicity == 0)
 			{
-				return new()
+				return new DiceExpressionResult()
+				{
+					Value = 0,
+					TermType = $"0d{Sides}",
+				};
+			}
+			else if (Multiplicity == 1)
+			{
+				return new DiceExpressionResult()
 				{
 					Value = Roller.RollDie(Sides),
 					TermType = $"d{Sides}"

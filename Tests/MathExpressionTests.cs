@@ -59,17 +59,17 @@ namespace cmdwtf.NumberStones.Tests
 
 		[DataTestMethod]
 		[DataRow("5/5", 1)]
-		[DataRow("5/15", 5 / 15)]
+		[DataRow("5/15", 0)]
 		[DataRow("15/5", 3)]
 		[DataRow("5/-15", -5 / 15)]
-		public void DivisionCorrect(string input, int expected)
+		public void IntegerDivisionCorrect(string input, int expected)
 		{
 			DiceExpression? expression = Dice.Parse(input);
 			Assert.IsNotNull(expression);
 			Assert.IsFalse(expression.IsEmpty);
 			DiceResult result = expression.Roll();
 			Tools.Write(input, expression, result, expected);
-			Assert.IsTrue(result.Value == expected);
+			Assert.IsTrue((int)result.Value == expected);
 		}
 
 		[DataTestMethod]

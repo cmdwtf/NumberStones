@@ -15,6 +15,14 @@ namespace cmdwtf.NumberStones.Rollers
 			_random = customRandom;
 		}
 
-		public virtual int RollDie(int sides) => _random.Next(0, sides) + 1;
+		public virtual int RollDie(int sides)
+		{
+			if (sides == 0)
+			{
+				return 0;
+			}
+
+			return _random.Next(0, sides) + 1;
+		}
 	}
 }

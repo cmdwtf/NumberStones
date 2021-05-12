@@ -7,6 +7,7 @@ namespace cmdwtf.NumberStones.Tests
 	public class ParserTests
 	{
 		[DataTestMethod]
+		[DataRow("d", "1d0")]
 		[DataRow("d6", "1d6")]
 		[DataRow("4d6", "4d6")]
 		[DataRow("4d6d1", "4d6dl1")]
@@ -28,8 +29,6 @@ namespace cmdwtf.NumberStones.Tests
 		}
 
 		[DataTestMethod]
-		[DataRow("d")]
-		[DataRow("1d")]
 		[DataRow("1d6 *")]
 		[DataRow("1d6 + (1 + 1")]
 		[DataRow("1d6 + 1 )")]
