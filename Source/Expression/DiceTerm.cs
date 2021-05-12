@@ -98,7 +98,8 @@ namespace cmdwtf.NumberStones.Expression
 				return new DiceExpressionResult()
 				{
 					Value = 0,
-					TermType = $"0d{Sides}",
+					Sides = Sides,
+					TermType = $"0d{Sides}"
 				};
 			}
 			else if (Multiplicity == 1)
@@ -106,6 +107,7 @@ namespace cmdwtf.NumberStones.Expression
 				return new DiceExpressionResult()
 				{
 					Value = Roller.RollDie(Sides),
+					Sides = Sides,
 					TermType = $"d{Sides}"
 				};
 			}
@@ -116,6 +118,7 @@ namespace cmdwtf.NumberStones.Expression
 				select new DiceExpressionResult()
 				{
 					Value = roll,
+					Sides = Sides,
 					TermType = "d" + Sides,
 					CriticalSuccess = roll == Sides,
 					CriticalFailure = roll == 1

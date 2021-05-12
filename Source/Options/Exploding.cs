@@ -23,16 +23,57 @@ namespace cmdwtf.NumberStones.Options
 				return input;
 			}
 
-			return input.Select(r =>
+			return input.SelectMany(r =>
 			{
 				if (ModeComparison(Value, r.Value))
 				{
-					// #todo
-					throw new System.NotImplementedException("Exploding dice not implemented yet.");
+					return ExplodeRoll(r, roller);
 				}
 
-				return r;
+				return new[] { r };
 			});
+		}
+
+		private IEnumerable<DiceExpressionResult> ExplodeRoll(DiceExpressionResult r, IDieRoller roller)
+		{
+			List<DiceExpressionResult> explodedResults = new List<DiceExpressionResult>();
+
+			int explodedRoll;
+			int explodedTotal = 0;
+			int explodedCount = 0;
+			int sides = (int)r.Sides;
+
+			do
+			{
+				explodedRoll = roller.RollDie(sides);
+				explodedCount++;
+				explodedTotal += explodedRoll;
+
+				// penetrating rolls lose 1 when exploding.
+				int actualRollValue = Type == ExplodingDiceMode.Penetrating ? explodedRoll - 1 : explodedRoll;
+
+				if (Type == ExplodingDiceMode.Classic ||
+					Type == ExplodingDiceMode.Penetrating)
+				{
+					yield return new DiceExpressionResult()
+					{
+						Value = actualRollValue,
+						Sides = sides,
+						TermType = $"!d{sides}",
+					};
+				}
+			}
+			while (explodedRoll == sides);
+
+			if (Type == ExplodingDiceMode.Compound)
+			{
+				yield return new DiceExpressionResult()
+				{
+					Value = explodedTotal,
+					Sides = sides,
+					TermType = $"!{explodedCount}d{sides}",
+				};
+			}
 		}
 
 		public override void BuildOptionString(StringBuilder builder)
