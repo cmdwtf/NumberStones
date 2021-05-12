@@ -1,33 +1,34 @@
 ﻿using System.Linq;
 
 using cmdwtf.NumberStones.Expression;
-using cmdwtf.NumberStones.Operations;
 
 using Superpower;
 using Superpower.Parsers;
+
+using static cmdwtf.NumberStones.Expression.BinaryOperation;
 
 namespace cmdwtf.NumberStones.Parser
 {
 	// doc
 	internal static class DiceExpressionParsers
 	{
-		private static TokenListParser<DiceExpressionToken, BinaryOperator> Operator(DiceExpressionToken op, BinaryOperator opType)
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Operator(DiceExpressionToken op, BinaryOperationCreationDelegate opType)
 			=> Token.EqualTo(op).Value(opType);
 
-		private static TokenListParser<DiceExpressionToken, BinaryOperator> Add { get; } =
-			Operator(DiceExpressionToken.Add, BinaryOperations.Add);
-		private static TokenListParser<DiceExpressionToken, BinaryOperator> Subtract { get; } =
-			Operator(DiceExpressionToken.Subtract, BinaryOperations.Subtract);
-		private static TokenListParser<DiceExpressionToken, BinaryOperator> Multiply { get; } =
-			Operator(DiceExpressionToken.Multiply, BinaryOperations.Multiply);
-		private static TokenListParser<DiceExpressionToken, BinaryOperator> Divide { get; } =
-			Operator(DiceExpressionToken.Divide, BinaryOperations.Divide);
-		private static TokenListParser<DiceExpressionToken, BinaryOperator> Modulo { get; } =
-			Operator(DiceExpressionToken.Modulo, BinaryOperations.Modulo);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Add { get; } =
+			Operator(DiceExpressionToken.Add, BinaryOperation.Add);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Subtract { get; } =
+			Operator(DiceExpressionToken.Subtract, BinaryOperation.Subtract);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Multiply { get; } =
+			Operator(DiceExpressionToken.Multiply, BinaryOperation.Multiply);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Divide { get; } =
+			Operator(DiceExpressionToken.Divide, BinaryOperation.Divide);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Modulo { get; } =
+			Operator(DiceExpressionToken.Modulo, BinaryOperation.Modulo);
 
 		private static TokenListParser<DiceExpressionToken, IExpression> SubExpression { get; } =
 			from open in Token.EqualTo(DiceExpressionToken.ParenthesisLeft)
-			from expr in Parse.Ref(() => Expression ?? throw new ParseException("Expression parser null."))
+			from expr in Parse.Ref(() => AddSubtract ?? throw new ParseException("Expression parser null."))
 			from close in Token.EqualTo(DiceExpressionToken.ParenthesisRight)
 			select expr as IExpression;
 
@@ -42,8 +43,8 @@ namespace cmdwtf.NumberStones.Parser
 				)
 			select result;
 
-		private static IExpression MakeBinary(BinaryOperator op, IExpression left, IExpression right)
-			=> new BinaryOperation(left, right, op);
+		private static IExpression MakeBinary(BinaryOperationCreationDelegate op, IExpression left, IExpression right)
+			=> op(left, right);
 
 		private static TokenListParser<DiceExpressionToken, IExpression> MultiplyDivide { get; } =
 			Parse.Chain(Multiply.Or(Divide).Or(Modulo), Term, MakeBinary);

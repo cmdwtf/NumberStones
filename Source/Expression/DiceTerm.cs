@@ -2,6 +2,7 @@
 using System.Linq;
 
 using cmdwtf.NumberStones.Exceptions;
+using cmdwtf.NumberStones.Options;
 
 namespace cmdwtf.NumberStones.Expression
 {
@@ -73,7 +74,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			Settings = new(sides, multiplicity)
 			{
-				Options = drop > 0 ? $"d{drop}" : ""
+				OptionString = drop > 0 ? $"d{drop}" : ""
 			};
 		}
 
@@ -101,17 +102,21 @@ namespace cmdwtf.NumberStones.Expression
 				};
 			}
 
-			List<ExpressionResult> results = new();
-
-			results.AddRange(
+			IEnumerable<DiceExpressionResult> results =
 				from i in Enumerable.Range(0, Multiplicity)
-				select new ExpressionResult()
+				let roll = Roller.RollDie(Sides)
+				select new DiceExpressionResult()
 				{
-					Value = Roller.RollDie(Sides),
-					TermType = "d" + Sides
-				});
+					Value = roll,
+					TermType = "d" + Sides,
+					CriticalSuccess = roll == Sides,
+					CriticalFailure = roll == 1
+				};
 
-			// # apply settings
+			foreach (IDiceOption option in Settings.Options)
+			{
+				results = option.Apply(results, Roller);
+			}
 
 			return new MultipleTermResult(results)
 			{
@@ -123,11 +128,6 @@ namespace cmdwtf.NumberStones.Expression
 		/// Returns a string that represents this DiceTerm
 		/// </summary>
 		/// <returns>A string representing this DiceTerm</returns>
-		public override string ToString()
-		{
-			// #todo
-			string keep = "";
-			return $"{Multiplicity}d{Sides}{keep}";
-		}
+		public override string ToString() => Settings.ToString();
 	}
 }

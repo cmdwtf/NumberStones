@@ -3,7 +3,7 @@
 namespace cmdwtf.NumberStones.Expression
 {
 	// #doc
-	public record UnaryOperation(IExpression Operand, UnaryOperator Operator)
+	public record UnaryOperation(IExpression Operand, UnaryOperator Operator, char Symbol)
 		: IOperation
 	{
 		public ExpressionResult Evaluate()
@@ -12,6 +12,10 @@ namespace cmdwtf.NumberStones.Expression
 			return result;
 		}
 
-		public static UnaryOperation Negative(IExpression operand) => new(operand, UnaryOperations.Negative);
+		public override string ToString() => $"{Symbol}{Operand}";
+
+		public static UnaryOperation Negative(IExpression operand) => new(operand, UnaryOperations.Negative, '-');
+
+		public delegate UnaryOperation UnaryOperationCreationDelegate(IExpression operand);
 	}
 }

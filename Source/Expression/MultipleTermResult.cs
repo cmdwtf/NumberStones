@@ -15,5 +15,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			Value = _subResults.Sum(r => r.Value);
 		}
+
+		public override string ToString() => string.Join(", ", _subResults);
 	}
 }

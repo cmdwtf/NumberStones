@@ -15,5 +15,7 @@
 		/// In 1d6 + 5, the 1d6 term is of type "d6" and the 5 term is of type "constant"
 		/// </summary>
 		public string TermType { get; init; } = string.Empty;
+
+		public override string ToString() => $"{Value} ({TermType})";
 	}
 }

@@ -84,7 +84,7 @@ namespace cmdwtf.NumberStones.Parser
 		private static TextParser<IDiceOption> DropOption { get; } =
 			from key in Character.EqualToIgnoreCase(Drop.Symbol)
 			from mode in HighOrLowMode.Try()
-				.OptionalOrDefault(HighLowMode.High)
+				.OptionalOrDefault(HighLowMode.Low)
 			from val in Numerics.DecimalDecimal.OptionalOrDefault(1m)
 			select new Drop(val, mode) as IDiceOption;
 
@@ -148,7 +148,7 @@ namespace cmdwtf.NumberStones.Parser
 			from options in DiceOptions
 			select new DiceSettings(sides, multiplicity)
 			{
-				ParsedDiceOptions = options
+				ParsedOptions = options
 			};
 
 		internal static TextParser<DiceTerm> DiceTerm { get; } =

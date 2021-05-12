@@ -66,7 +66,7 @@ namespace cmdwtf.NumberStones
 			{
 				_expression = new DiceTerm(new DiceSettings(sides, multiplicity)
 				{
-					Options = drop == null ? "" : $"d{drop}"
+					OptionString = drop == null ? "" : $"d{drop}"
 				}),
 				IsEmpty = false
 			};
@@ -185,5 +185,12 @@ namespace cmdwtf.NumberStones
 		/// </summary>
 		/// <returns>The evaluated expression's result.</returns>
 		ExpressionResult IExpression.Evaluate() => _expression.Evaluate();
+
+
+		/// <summary>
+		/// Returns a string that represents this Dice Expression
+		/// </summary>
+		/// <returns>A string representing this Dice Expression</returns>
+		public override string ToString() => _expression?.ToString() ?? "<no expression>";
 	}
 }

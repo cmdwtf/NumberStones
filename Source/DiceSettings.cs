@@ -33,18 +33,18 @@ namespace cmdwtf.NumberStones
 			_ => SidesReal.ToString(),
 		};
 
-		private readonly List<IDiceOption> _diceOptions = new();
-		public IReadOnlyList<IDiceOption> DiceOptions => _diceOptions.AsReadOnly();
+		private readonly List<IDiceOption> _options = new();
+		public IReadOnlyList<IDiceOption> Options => _options.AsReadOnly();
 
-		internal IDiceOption[] ParsedDiceOptions
+		internal IDiceOption[] ParsedOptions
 		{
 			init
 			{
-				_diceOptions = value.ToList();
+				_options = value.ToList();
 			}
 		}
 
-		public string Options
+		public string OptionString
 		{
 			get => BuildOptionString();
 			init
@@ -153,7 +153,7 @@ namespace cmdwtf.NumberStones
 		{
 			StringBuilder builder = new();
 
-			foreach (IDiceOption option in _diceOptions)
+			foreach (IDiceOption option in _options)
 			{
 				option.BuildOptionString(builder);
 			}
@@ -162,6 +162,6 @@ namespace cmdwtf.NumberStones
 		}
 
 		public override string ToString()
-			=> $"{MultiplicityReal}d{SidesString}{Options}";
+			=> $"{MultiplicityReal}d{SidesString}{OptionString}";
 	}
 }

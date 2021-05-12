@@ -7,5 +7,7 @@ namespace cmdwtf.NumberStones.Expression
 		public IDieRoller Roller { protected get; set; } = Instances.DefaultRoller;
 
 		public abstract ExpressionResult Evaluate();
+
+		public override string ToString() => GetType().Name;
 	}
 }
