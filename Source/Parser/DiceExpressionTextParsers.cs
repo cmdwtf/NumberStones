@@ -26,6 +26,7 @@ namespace cmdwtf.NumberStones.Parser
 			+ $"{Options.Critical.Symbol}"
 			+ $"{Options.Critical.SymbolSuccess}"
 			+ $"{Options.Critical.SymbolFailure}"
+			+ $"{Options.Reroll.Symbol}"
 			+ $"{Options.Twice.Symbol}"
 			+ $"{Options.Exploding.Symbol}"
 			+ $"{Options.Exploding.SymbolCompound}"

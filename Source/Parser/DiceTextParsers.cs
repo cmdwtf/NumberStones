@@ -59,13 +59,15 @@ namespace cmdwtf.NumberStones.Parser
 						Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
 						.Try()
 						.Value(ComparisonDiceMode.GreaterThanEquals)
-					).OptionalOrDefault(ComparisonDiceMode.GreaterThan),
+						.OptionalOrDefault(ComparisonDiceMode.GreaterThan)
+					),
 					Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolLess)
 					.IgnoreThen(
 						Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
 						.Try()
 						.Value(ComparisonDiceMode.LessThanEquals)
-					).OptionalOrDefault(ComparisonDiceMode.LessThan),
+						.OptionalOrDefault(ComparisonDiceMode.LessThan)
+					),
 					Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolNot)
 					.IgnoreThen(
 						Character.EqualToIgnoreCase(ComparisonOptionBase.SymbolEqual)
@@ -76,9 +78,9 @@ namespace cmdwtf.NumberStones.Parser
 
 		private static TextParser<IDiceOption> CriticalOption { get; } =
 			from key in Character.EqualToIgnoreCase(Critical.Symbol)
-			from val in Numerics.DecimalDecimal
 			from type in CriticalType
 			from mode in ComparisonMode
+			from val in Numerics.DecimalDecimal
 			select new Critical(val, type, mode) as IDiceOption;
 
 		private static TextParser<IDiceOption> DropOption { get; } =
@@ -114,7 +116,6 @@ namespace cmdwtf.NumberStones.Parser
 			select new Reroll(val) as IDiceOption;
 
 		private static TextParser<IDiceOption> TargetOption { get; } =
-			from key in Character.EqualToIgnoreCase(Target.SymbolEqual)
 			from mode in ComparisonMode
 			from val in Numerics.DecimalDecimal
 			select new Target(val, mode) as IDiceOption;
@@ -124,7 +125,7 @@ namespace cmdwtf.NumberStones.Parser
 			from val in Numerics.DecimalDecimal
 			select new Twice(val) as IDiceOption;
 
-		private static TextParser<IDiceOption[]> DiceOptions { get; } =
+		internal static TextParser<IDiceOption[]> DiceOptions { get; } =
 			from options in Parse.OneOf(
 				CriticalOption,
 				DropOption,

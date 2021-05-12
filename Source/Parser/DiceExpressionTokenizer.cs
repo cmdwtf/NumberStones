@@ -14,7 +14,7 @@ namespace cmdwtf.NumberStones.Parser
 	// #doc
 	internal class DiceExpressionTokenizer
 	{
-		private static TextParser<Unit> DiceToken { get; } =
+		private static TextParser<Unit> Dice { get; } =
 			from first in Character.Digit.Or(DiceSeperatorCharacter).AtLeastOnce()
 			from rest in Parse.OneOf(
 					Character.Digit.AtLeastOnce().Value(Unit.Value),
@@ -35,7 +35,7 @@ namespace cmdwtf.NumberStones.Parser
 				.Match(Character.EqualTo(ModuloOperator), DiceExpressionToken.Modulo)
 				.Match(Character.EqualTo(OpenComment), DiceExpressionToken.Comment)
 				.Match(Numerics.Decimal, DiceExpressionToken.Constant, requireDelimiters: true)
-				.Match(DiceToken, DiceExpressionToken.Dice, requireDelimiters: true)
+				.Match(Dice, DiceExpressionToken.Dice, requireDelimiters: true)
 				.Match(Identifier.CStyle, DiceExpressionToken.None, requireDelimiters: true)
 				.Build();
 	}
