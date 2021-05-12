@@ -1,4 +1,6 @@
-﻿namespace cmdwtf.NumberStones.Expression
+﻿using cmdwtf.NumberStones.DiceTypes;
+
+namespace cmdwtf.NumberStones.Expression
 {
 	public record PlanechaseExpressionResult(PlanechaseResult Result) : DiceExpressionResult
 	{

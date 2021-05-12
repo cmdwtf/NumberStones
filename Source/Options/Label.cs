@@ -8,6 +8,9 @@ namespace cmdwtf.NumberStones.Options
 {
 	public record Label(string Value) : IDiceOption<string>
 	{
+		public const char SymbolOpen = '[';
+		public const char SymbolClose = ']';
+
 		public string Name => nameof(Label);
 
 		public IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
@@ -20,7 +23,7 @@ namespace cmdwtf.NumberStones.Options
 				return;
 			}
 
-			builder.Append($"[{Value}]");
+			builder.Append($"{SymbolOpen}{Value}{SymbolClose}");
 		}
 	}
 }

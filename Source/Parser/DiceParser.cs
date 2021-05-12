@@ -17,6 +17,7 @@ namespace cmdwtf.NumberStones.Parser
 				result = DiceExpression.Empty();
 				error = tokens.ToString();
 				errorPosition = tokens.ErrorPosition;
+				System.Diagnostics.Debug.WriteLine($"{nameof(DiceParser)} Tokenize failed: {errorPosition} {error}");
 				return false;
 			}
 
@@ -27,6 +28,7 @@ namespace cmdwtf.NumberStones.Parser
 				result = DiceExpression.Empty();
 				error = parsed.ToString();
 				errorPosition = parsed.ErrorPosition;
+				System.Diagnostics.Debug.WriteLine($"{nameof(DiceParser)} Parse failed: {errorPosition} {error}");
 				return false;
 			}
 

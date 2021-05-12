@@ -28,12 +28,12 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// Sum this many dice with the highest values out of those rolled
 		/// </summary>
-		public int Keep => Settings.Sides - Settings.Drop;
+		//public int Keep => Settings.Sides - Settings.Drop; #bringback
 
 		/// <summary>
 		/// Sum all but this many dice with the highest values out of those rolled
 		/// </summary>
-		public int Drop => Settings.Drop;
+		//public int Drop => Settings.Drop;
 
 		/// <summary>
 		/// Construct a new instance of the DiceTerm class using the specified values
@@ -71,7 +71,10 @@ namespace cmdwtf.NumberStones.Expression
 				throw new InvalidOptionException($"Cannot choose {drop} dice, only {multiplicity} were rolled");
 			}
 
-			Settings = new(sides, multiplicity, drop);
+			Settings = new(sides, multiplicity)
+			{
+				Options = drop > 0 ? $"d{drop}" : ""
+			};
 		}
 
 		/// <summary>
@@ -89,7 +92,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// <returns>An IEnumerable of TermResult which will have one item per die rolled</returns>
 		public override ExpressionResult Evaluate()
 		{
-			if (Multiplicity == 1 && Keep == 1)
+			if (Multiplicity == 1)
 			{
 				return new()
 				{
@@ -122,7 +125,8 @@ namespace cmdwtf.NumberStones.Expression
 		/// <returns>A string representing this DiceTerm</returns>
 		public override string ToString()
 		{
-			string keep = Keep == Multiplicity ? "" : "k" + Keep;
+			// #todo
+			string keep = "";
 			return $"{Multiplicity}d{Sides}{keep}";
 		}
 	}

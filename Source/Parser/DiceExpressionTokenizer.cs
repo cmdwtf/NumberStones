@@ -15,13 +15,12 @@ namespace cmdwtf.NumberStones.Parser
 	internal class DiceExpressionTokenizer
 	{
 		private static TextParser<Unit> DiceToken { get; } =
-			from first in Character.Digit.Or(DiceSeperatorCharacter).IgnoreMany()
-			from rest in Character.Digit.Or(DiceOptionCharacter).IgnoreMany()
-			select Unit.Value;
-
-		private static TextParser<Unit> DiceNumberToken { get; } =
-			from first in Character.Digit
-			from rest in Character.Digit.Or(Character.In('.')).IgnoreMany()
+			from first in Character.Digit.Or(DiceSeperatorCharacter).AtLeastOnce()
+			from rest in Parse.OneOf(
+					Character.Digit.AtLeastOnce().Value(Unit.Value),
+					DiceInlineLabel,
+					DiceOptionCharacter.AtLeastOnce().Value(Unit.Value)
+				).IgnoreMany()
 			select Unit.Value;
 
 		public static Tokenizer<DiceExpressionToken> Instance { get; } =
@@ -35,8 +34,8 @@ namespace cmdwtf.NumberStones.Parser
 				.Match(Character.EqualTo(SubtractOperator), DiceExpressionToken.Subtract)
 				.Match(Character.EqualTo(ModuloOperator), DiceExpressionToken.Modulo)
 				.Match(Character.EqualTo(OpenComment), DiceExpressionToken.Comment)
+				.Match(Numerics.Decimal, DiceExpressionToken.Constant, requireDelimiters: true)
 				.Match(DiceToken, DiceExpressionToken.Dice, requireDelimiters: true)
-				.Match(DiceNumberToken, DiceExpressionToken.Constant, requireDelimiters: true)
 				.Match(Identifier.CStyle, DiceExpressionToken.None, requireDelimiters: true)
 				.Build();
 	}

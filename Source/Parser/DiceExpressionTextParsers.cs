@@ -3,27 +3,14 @@
 using cmdwtf.NumberStones.Expression;
 
 using Superpower;
+using Superpower.Model;
 using Superpower.Parsers;
 
 namespace cmdwtf.NumberStones.Parser
 {
-	internal class DiceExpressionTextParsers
+	internal static class DiceExpressionTextParsers
 	{
-		public const string DiceOptionKeep = "kK";
-		public const string DiceOptionDrop = "dD";
-		public const string DiceOptionHigh = "hH";
-		public const string DiceOptionLow = "lL";
-		public const string DiceOptionCritical = "cC";
-		public const string DiceOptionSuccess = "sS";
-		public const string DiceOptionFail = "fF";
-		public const string DiceOptionFudge = "fF";
-		public const string DiceOptionCountTwice = "tT";
-		public const string DiceOptionExploding = "!";
-		public const string DiceOptionGreaterThan = ">";
-		public const string DiceOptionLessThan = "<";
-		public const string DiceOptionEqualTo = "=";
-		public const string DiceOptionLabelOpen = "[";
-		public const string DiceOptionLabelClose = "]";
+		public const char DiceSeperator = 'd';
 
 		// #creep: penetrating - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-PenetratingDice(B,F)!pCP
 		// #creep: matching - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-DiceMatchingmt
@@ -31,45 +18,43 @@ namespace cmdwtf.NumberStones.Parser
 		// #creep: sort - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-SortingDice(B,F)sa/sd
 		// #creep: group - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-GroupedRolls
 
-		public const string DiceOptionString =
-			DiceOptionKeep
-			+ DiceOptionDrop
-			+ DiceOptionHigh
-			+ DiceOptionLow
-			+ DiceOptionCritical
-			+ DiceOptionSuccess
-			+ DiceOptionFail
-			+ DiceOptionFudge
-			+ DiceOptionCountTwice
-			+ DiceOptionExploding
-			+ DiceOptionGreaterThan
-			+ DiceOptionLessThan
-			+ DiceOptionEqualTo
-			+ DiceOptionLabelOpen
-			+ DiceOptionLabelClose;
+		public static string DiceOptionString { get; } =
+			$"{Options.Keep.Symbol}"
+			+ $"{Options.Drop.Symbol}"
+			+ $"{Options.Keep.SymbolHigh}"
+			+ $"{Options.Keep.SymbolLow}"
+			+ $"{Options.Critical.Symbol}"
+			+ $"{Options.Critical.SymbolSuccess}"
+			+ $"{Options.Critical.SymbolFailure}"
+			+ $"{Options.Twice.Symbol}"
+			+ $"{Options.Exploding.Symbol}"
+			+ $"{Options.Exploding.SymbolCompound}"
+			+ $"{Options.Exploding.SymbolPenetrating}"
+			+ $"{Options.ComparisonOptionBase.SymbolEqual}"
+			+ $"{Options.ComparisonOptionBase.SymbolGreater}"
+			+ $"{Options.ComparisonOptionBase.SymbolLess}"
+			+ $"{Options.ComparisonOptionBase.SymbolNot}";
 
 		public static char[] DiceOptionChars { get; } =
-			DiceOptionString.AsQueryable().Distinct().ToArray();
+			(DiceOptionString + DiceOptionString.ToUpper())
+			.AsQueryable().Distinct().ToArray();
 
 		public static TextParser<char> DiceSeperatorCharacter { get; } =
-			Character.In('d', 'D');
+			Character.EqualToIgnoreCase(DiceSeperator);
 
 		public static TextParser<char> DiceOptionCharacter { get; } =
 			Character.In(DiceOptionChars);
 
+		public static TextParser<Unit> DiceInlineLabel { get; } =
+			from open in Character.EqualTo(DiceExpressionTokenConstants.OpenLabel)
+			from content in Character.ExceptIn(DiceExpressionTokenConstants.CloseLabel)
+			from close in Character.EqualTo(DiceExpressionTokenConstants.CloseLabel)
+			select Unit.Value;
+
 
 		public static TextParser<IExpression> DiceTerm { get; } =
-			from multiplicity in Span.MatchedBy(Numerics.Decimal)
-				.Apply(Numerics.DecimalDecimal)
-			from sides in DiceSeperatorCharacter.IgnoreThen(
-					Span.MatchedBy(Numerics.Decimal)
-				)
-				.Apply(Numerics.DecimalDecimal)
-			from options in Character.AnyChar.Many() // everything else is an option.
-			select new DiceTerm(new DiceSettings(sides, multiplicity)
-			{
-				Options = new string(options)
-			}) as IExpression;
+			from term in DiceTextParsers.DiceTerm
+			select term as IExpression;
 
 		public static TextParser<IExpression> ConstantTerm { get; } =
 			from value in Span.MatchedBy(Numerics.Decimal)

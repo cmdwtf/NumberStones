@@ -8,9 +8,11 @@ using cmdwtf.NumberStones.Rollers;
 
 namespace cmdwtf.NumberStones.Options
 {
-	public record Drop(int Amount) : DecimalDiceOption(Amount)
+	public record Drop(decimal Amount, HighLowMode Mode = HighLowMode.Low) : DecimalDiceOption(Amount)
 	{
-		public HighLowMode Mode { get; init; } = HighLowMode.Low;
+		public const char Symbol = 'd';
+		public const char SymbolHigh = 'h';
+		public const char SymbolLow = 'l';
 
 		public override string Name => nameof(Drop);
 
@@ -24,15 +26,12 @@ namespace cmdwtf.NumberStones.Options
 			int count = input.Count();
 			int keep = count - (int)Value;
 
-			switch (Mode)
+			return Mode switch
 			{
-				case HighLowMode.Low:
-					return input.OrderBy(r => r.Value).Take(keep);
-				case HighLowMode.High:
-					return input.OrderByDescending(r => r.Value).Take(keep);
-				default:
-					throw new InvalidOptionException("Unhandled high low mode.");
-			}
+				HighLowMode.Low => input.OrderBy(r => r.Value).Take(keep),
+				HighLowMode.High => input.OrderByDescending(r => r.Value).Take(keep),
+				_ => throw new InvalidOptionException("Unhandled high low mode."),
+			};
 		}
 
 		public override void BuildOptionString(StringBuilder builder)
@@ -42,8 +41,8 @@ namespace cmdwtf.NumberStones.Options
 				return;
 			}
 
-			string hl = Mode == HighLowMode.High ? "h" : "l";
-			builder.Append($"d{hl}{Amount}");
+			char hl = Mode == HighLowMode.High ? SymbolHigh : SymbolLow;
+			builder.Append($"{Symbol}{hl}{Amount}");
 		}
 	}
 }

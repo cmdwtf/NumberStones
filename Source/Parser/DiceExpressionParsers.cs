@@ -35,11 +35,12 @@ namespace cmdwtf.NumberStones.Parser
 			from result in Parse.OneOf(
 				SubExpression,
 				Token.EqualTo(DiceExpressionToken.Dice)
-					.Apply(DiceExpressionTextParsers.DiceTerm),
+					.Apply(DiceExpressionTextParsers.DiceTerm)
+					.Try(),
 				Token.EqualTo(DiceExpressionToken.Constant)
 					.Apply(DiceExpressionTextParsers.ConstantTerm)
 				)
-			select DiceExpression.Empty() as IExpression;
+			select result;
 
 		private static IExpression MakeBinary(BinaryOperator op, IExpression left, IExpression right)
 			=> new BinaryOperation(left, right, op);

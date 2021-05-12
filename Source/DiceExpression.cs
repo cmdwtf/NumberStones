@@ -29,6 +29,7 @@ namespace cmdwtf.NumberStones
 		internal DiceExpression(IExpression expr)
 		{
 			_expression = expr;
+			IsEmpty = _expression is EmptyExpression;
 		}
 
 		/// <summary>
@@ -63,7 +64,10 @@ namespace cmdwtf.NumberStones
 		{
 			DiceExpression result = new()
 			{
-				_expression = new DiceTerm(new DiceSettings(sides, multiplicity, drop ?? 0)),
+				_expression = new DiceTerm(new DiceSettings(sides, multiplicity)
+				{
+					Options = drop == null ? "" : $"d{drop}"
+				}),
 				IsEmpty = false
 			};
 

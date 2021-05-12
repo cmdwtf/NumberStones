@@ -9,6 +9,8 @@ namespace cmdwtf.NumberStones.Options
 {
 	public record Reroll(decimal Value) : DecimalDiceOption(Value)
 	{
+		public const char Symbol = 'r';
+
 		public override string Name => nameof(Reroll);
 
 		public override IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
@@ -39,7 +41,7 @@ namespace cmdwtf.NumberStones.Options
 				return;
 			}
 
-			builder.Append($"r{Value}");
+			builder.Append($"{Symbol}{Value}");
 		}
 	}
 }

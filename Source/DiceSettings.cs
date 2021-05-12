@@ -1,20 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
+using cmdwtf.NumberStones.DiceTypes;
 using cmdwtf.NumberStones.Options;
+using cmdwtf.NumberStones.Parser;
 
 namespace cmdwtf.NumberStones
 {
 	// #doc
-	public record DiceSettings(decimal SidesReal, decimal MultiplicityReal = 1m)
+	public record DiceSettings(decimal SidesReal, decimal MultiplicityReal = 1m, DiceType Kind = DiceType.Polyhedron)
 	{
 		public const string NoOptions = "";
 
-		public int Sides => (int)Math.Truncate(SidesReal);
+		public int Sides => (int)Math.Truncate(ModeSides);
 		public int Multiplicity => (int)Math.Truncate(MultiplicityReal);
 
-		public string SidesString =>
-			Fate ? "F" : SidesReal.ToString();
+		private decimal ModeSides => Kind switch
+		{
+			DiceType.Coin => 2,
+			DiceType.Fate => 6,
+			DiceType.Planechase => 6,
+			_ => SidesReal,
+		};
+
+		public string SidesString => Kind switch
+		{
+			DiceType.Coin => DiceTextParsers.CoinSide,
+			DiceType.Fate => DiceTextParsers.FateSide,
+			DiceType.Planechase => DiceTextParsers.PlanechaseSide,
+			_ => SidesReal.ToString(),
+		};
+
+		private readonly List<IDiceOption> _diceOptions = new();
+		public IReadOnlyList<IDiceOption> DiceOptions => _diceOptions.AsReadOnly();
+
+		internal IDiceOption[] ParsedDiceOptions
+		{
+			init
+			{
+				_diceOptions = value.ToList();
+			}
+		}
 
 		public string Options
 		{
@@ -34,7 +62,7 @@ namespace cmdwtf.NumberStones
 					switch (optionChars[scan])
 					{
 						case '!':
-							(ExplodingMode, ExplodingTarget) = ParseExploding(optionChars, ref scan);
+							ParseExploding(optionChars, ref scan);
 							break;
 						case 'd':
 							// drop
@@ -42,8 +70,23 @@ namespace cmdwtf.NumberStones
 						case 'k':
 							// keep
 							break;
+						case 'c':
+							// crit
+							break;
 						case 'r':
 							// reroll
+							break;
+						case 't':
+							// twice
+							break;
+						case '=':
+						case '>':
+						case '<':
+						case '~':
+							// comparison
+							break;
+						case '[':
+							// label
 							break;
 						default:
 							throw new Exceptions.DiceExpressionOptionParseException($"Unhandled option character: {optionChars[scan]}", value);
@@ -71,7 +114,6 @@ namespace cmdwtf.NumberStones
 
 		private static (ExplodingDiceMode mode, int target) ParseExploding(char[] optionChars, ref int scan)
 		{
-			char c = char.ToLowerInvariant(optionChars[scan]);
 			char next = (scan + 1 < optionChars.Length) ? char.ToLowerInvariant(optionChars[scan + 1]) : '\0';
 			char nextNext = (scan + 2 < optionChars.Length) ? char.ToLowerInvariant(optionChars[scan + 2]) : '\0';
 
@@ -101,163 +143,25 @@ namespace cmdwtf.NumberStones
 			return (mode, target);
 		}
 
-		// options controlled values
-		public int Drop { get; private init; } = 0;
-		public int Keep { get; private init; } = 0;
-		public int DropHigh { get; private init; } = 0;
-		public int KeepLow { get; private init; } = 0;
-		public string Label { get; private init; } = string.Empty;
-		public ExplodingDiceMode ExplodingMode { get; private init; } = ExplodingDiceMode.None;
-		public bool Exploding => ExplodingMode != ExplodingDiceMode.None;
-		public bool CompoundExploding => ExplodingMode == ExplodingDiceMode.Compound;
-		public bool PenetratingExploding => ExplodingMode == ExplodingDiceMode.Penetrating;
-		public int ExplodingTarget { get; private init; } = 0;
-		public bool Fudge { get; private init; } = false;
-		public bool Fate => Fudge;
-		public int[] Rerolls { get; private init; } = Array.Empty<int>();
-		public int Target { get; private init; } = 0;
-		public ComparisonDiceMode TargetMode { get; private init; } = ComparisonDiceMode.None;
-		public bool TargetGreaterThan => TargetMode is ComparisonDiceMode.GreaterThan or ComparisonDiceMode.GreaterThanEquals;
-		public bool TargetLessThan => TargetMode is ComparisonDiceMode.LessThan or ComparisonDiceMode.LessThanEquals;
-		public bool TargetEqualTo => TargetMode is ComparisonDiceMode.Equals or ComparisonDiceMode.GreaterThanEquals or ComparisonDiceMode.LessThanEquals;
-		public bool TargetNotEqualTo => TargetMode == ComparisonDiceMode.Not;
-		public int[] CriticalSuccessPoints { get; private init; } = Array.Empty<int>();
-		public int CriticalSuccessMin { get; private init; } = 0;
-		public int[] CriticalFailurePoints { get; private init; } = Array.Empty<int>();
-		public int CriticalFailureMax { get; private init; } = 0;
-		public int TwicePoint { get; private init; } = 0;
-
-		public static DiceSettings FudgeDice(decimal multiplicity = 1m, string options = NoOptions)
-		{
-			return new(0, multiplicity)
-			{
-				Fudge = true,
-				Options = options
-			};
-		}
-
-		public static DiceSettings FateDice(decimal multiplicity = 1m, string options = NoOptions)
-			=> FudgeDice(multiplicity, options);
-
 		public DiceSettings(int sides, int multiplicity)
 			: this(Convert.ToDecimal(sides), Convert.ToDecimal(multiplicity))
 		{
 
 		}
 
-		public DiceSettings(int sides, int multiplicity, int drop)
-			: this(Convert.ToDecimal(sides), Convert.ToDecimal(multiplicity))
-		{
-			Drop = drop;
-		}
-
 		private string BuildOptionString()
 		{
-			StringBuilder result = new();
+			StringBuilder builder = new();
 
-			if (CompoundExploding)
+			foreach (IDiceOption option in _diceOptions)
 			{
-				result.Append("!!");
-			}
-			else if (PenetratingExploding)
-			{
-				result.Append("!p");
-			}
-			else if (Exploding)
-			{
-				result.Append('!');
+				option.BuildOptionString(builder);
 			}
 
-			if (Exploding && ExplodingTarget > 0)
-			{
-				result.Append($">{ExplodingTarget}");
-			}
-
-			if (Drop > 0)
-			{
-				result.Append($"d{Drop}");
-			}
-
-			if (Keep > 0)
-			{
-				result.Append($"k{Keep}");
-			}
-
-			if (DropHigh > 0)
-			{
-				result.Append($"d{Drop}");
-			}
-
-			if (KeepLow > 0)
-			{
-				result.Append($"k{Keep}");
-			}
-
-			foreach (int reroll in Rerolls)
-			{
-				result.Append($"r{reroll}");
-			}
-
-			if (Target > 0 && TargetMode != ComparisonDiceMode.None)
-			{
-				if (TargetGreaterThan)
-				{
-					result.Append('>');
-				}
-				else if (TargetLessThan)
-				{
-					result.Append('<');
-				}
-
-				if (TargetNotEqualTo)
-				{
-					result.Append('~');
-				}
-
-				if (TargetEqualTo)
-				{
-					result.Append('=');
-				}
-
-				result.Append(Target);
-			}
-
-			foreach (int csPoint in CriticalSuccessPoints)
-			{
-				result.Append($"cs{csPoint}");
-			}
-
-			if (CriticalSuccessMin > 0)
-			{
-				result.Append($"cs>{CriticalSuccessMin}");
-			}
-
-			foreach (int cfPoint in CriticalFailurePoints)
-			{
-				result.Append($"cf{cfPoint}");
-			}
-
-			if (CriticalFailureMax > 0)
-			{
-				result.Append($"cf<{CriticalFailureMax}");
-			}
-
-			if (TwicePoint > 0)
-			{
-				result.Append($"t{TwicePoint}");
-			}
-
-			if (string.IsNullOrWhiteSpace(Label) == false)
-			{
-				result.Append($"[{Label}]");
-			}
-
-			return result.ToString();
+			return builder.ToString();
 		}
 
 		public override string ToString()
-		{
-			return $"{MultiplicityReal}d{SidesString}{Options}";
-		}
+			=> $"{MultiplicityReal}d{SidesString}{Options}";
 	}
 }

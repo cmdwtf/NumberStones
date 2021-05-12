@@ -45,6 +45,11 @@
 		public const char CloseSubExpression = _closeParentheses;
 		public const string CloseSubExpressionString = CloseParentheses;
 
+		public const char OpenLabel = _openBracket;
+		public const string OpenLabelString = OpenBracket;
+		public const char CloseLabel = _closeBracket;
+		public const string CloseLabelString = CloseBracket;
+
 		// operators
 		public const char MultiplyOperator = _asterisk;
 		public const string MultiplyOperatorString = Asterisk;
