@@ -9,15 +9,15 @@ namespace cmdwtf.NumberStones.Parser
 {
 	internal static class DiceTermTextParsers
 	{
-		public const string CoinSide = "C";
-		public const string FateSide = "F";
-		public const string PlanechaseSide = "P";
+		public const string CoinTypeSide = "C";
+		public const string FateTypeSide = "F";
+		public const string PlanechaseTypeSide = "P";
 
-		private static TextParser<DiceTypes.DiceType> DiceType { get; } =
+		private static TextParser<DiceTypes.DiceType> DiceKind { get; } =
 			from type in Parse.OneOf(
-					Span.EqualToIgnoreCase(CoinSide).Value(DiceTypes.DiceType.Coin),
-					Span.EqualToIgnoreCase(FateSide).Value(DiceTypes.DiceType.Fate),
-					Span.EqualToIgnoreCase(PlanechaseSide).Value(DiceTypes.DiceType.Planechase)
+					Span.EqualToIgnoreCase(CoinTypeSide).Value(DiceTypes.DiceType.Coin),
+					Span.EqualToIgnoreCase(FateTypeSide).Value(DiceTypes.DiceType.Fate),
+					Span.EqualToIgnoreCase(PlanechaseTypeSide).Value(DiceTypes.DiceType.Planechase)
 				).OptionalOrDefault(DiceTypes.DiceType.Polyhedron)
 			select type;
 
@@ -146,16 +146,17 @@ namespace cmdwtf.NumberStones.Parser
 			).Many()
 			select options;
 
-
 		internal static TextParser<DiceSettings> DiceSettingsFull { get; } =
 			from multiplicity in Span.MatchedBy(Numerics.Decimal)
 				.Apply(Numerics.DecimalDecimal)
 				.OptionalOrDefault(1m)
 			from seperator in DiceExpressionTextParsers.DiceSeperatorCharacter
 			from sides in DiceSides.OptionalOrDefault(0m)
-			from type in DiceType
+			from kind in DiceKind.Try()
+				.Where(k => sides == 0m && k != DiceTypes.DiceType.Polyhedron)
+				.OptionalOrDefault(DiceTypes.DiceType.Polyhedron)
 			from options in DiceOptions
-			select new DiceSettings(sides, multiplicity)
+			select new DiceSettings(sides, multiplicity, kind)
 			{
 				ParsedOptions = options
 			};

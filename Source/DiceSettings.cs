@@ -48,9 +48,9 @@ namespace cmdwtf.NumberStones
 		/// </summary>
 		public string SidesString => Kind switch
 		{
-			DiceType.Coin => DiceTermTextParsers.CoinSide,
-			DiceType.Fate => DiceTermTextParsers.FateSide,
-			DiceType.Planechase => DiceTermTextParsers.PlanechaseSide,
+			DiceType.Coin => DiceTermTextParsers.CoinTypeSide,
+			DiceType.Fate => DiceTermTextParsers.FateTypeSide,
+			DiceType.Planechase => DiceTermTextParsers.PlanechaseTypeSide,
 			_ => SidesReal.ToString(),
 		};
 
