@@ -86,5 +86,22 @@ namespace cmdwtf.NumberStones.Tests
 			Tools.Write(input, expression, result, expected);
 			Assert.IsTrue(result.Value == expected);
 		}
+
+		[DataTestMethod]
+		[DataRow("5 (5 + 5)", 50)]
+		[DataRow("(5 + 5) 6", 60)]
+		[DataRow("(((3)2)1)", 6)]
+		[DataRow("(1(2(3)))", 6)]
+		[DataRow("(1(2(3)2)1)", 12)]
+		[DataRow("4(6(2(3)2)6)4", 6912)]
+		public void ImplicitMultiplicationWithParenthesisCorrect(string input, int expected)
+		{
+			DiceExpression? expression = Dice.Parse(input);
+			Assert.IsNotNull(expression);
+			Assert.IsFalse(expression.IsEmpty);
+			DiceResult result = expression.Roll();
+			Tools.Write(input, expression, result, expected);
+			Assert.IsTrue(result.Value == expected);
+		}
 	}
 }

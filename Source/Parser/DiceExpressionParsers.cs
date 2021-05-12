@@ -25,20 +25,33 @@ namespace cmdwtf.NumberStones.Parser
 			Operator(DiceExpressionToken.Subtract, BinaryOperation.Subtract);
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Multiply { get; } =
 			Operator(DiceExpressionToken.Multiply, BinaryOperation.Multiply);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> ImplicitMultiplyLeftHandSide { get; } =
+			Operator(DiceExpressionToken.ParenthesisRight, BinaryOperation.Multiply);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> ImplicitMultiplyRightHandSide { get; } =
+			Operator(DiceExpressionToken.ParenthesisLeft, BinaryOperation.Multiply);
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Divide { get; } =
 			Operator(DiceExpressionToken.Divide, BinaryOperation.Divide);
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Modulo { get; } =
 			Operator(DiceExpressionToken.Modulo, BinaryOperation.Modulo);
+
 		private static TokenListParser<DiceExpressionToken, IExpression> Negate { get; } =
 			from operation in Operator(DiceExpressionToken.Subtract, UnaryOperation.Negate)
 			from term in Term ?? throw new ParseException($"{nameof(Term)} parser null.")
 			select operation(term) as IExpression;
 
+		private static TokenListParser<DiceExpressionToken, IExpression> OpenedSubExpression { get; } =
+			from subExpression in Parse.Ref(() => AddSubtract ?? throw new ParseException($"{nameof(AddSubtract)} parser null."))
+			from implicitMultiply in ImplicitMultiplyLeftHandSide
+			from expr in
+					(Term ?? throw new ParseException($"{nameof(Term)} parser null.")).Try()
+					.Select(nextTerm => MakeOperation(implicitMultiply, subExpression, nextTerm))
+					.OptionalOrDefault(subExpression)
+			select expr;
+
 		private static TokenListParser<DiceExpressionToken, IExpression> SubExpression { get; } =
 			from open in Token.EqualTo(DiceExpressionToken.ParenthesisLeft)
-			from expr in Parse.Ref(() => AddSubtract ?? throw new ParseException($"{nameof(AddSubtract)} parser null."))
-			from close in Token.EqualTo(DiceExpressionToken.ParenthesisRight)
-			select expr as IExpression;
+			from expr in OpenedSubExpression
+			select expr;
 
 		private static TokenListParser<DiceExpressionToken, IExpression> Constant { get; } =
 			from result in Token.EqualTo(DiceExpressionToken.Constant)
@@ -54,13 +67,15 @@ namespace cmdwtf.NumberStones.Parser
 					.Try(),
 				Negate.Or(Constant)
 				)
+				.Then(lhs =>
+					ImplicitMultiplyRightHandSide.Then(oper =>
+						OpenedSubExpression.Select(rhs => MakeOperation(oper, lhs, rhs))
+					).OptionalOrDefault(lhs)
+				)
 			select result;
 
 		private static IExpression MakeOperation(BinaryOperationCreationDelegate op, IExpression left, IExpression right)
 			=> op(left, right);
-
-		private static IExpression MakeOperation(UnaryOperationCreationDelegate op, IExpression operand)
-			=> op(operand);
 
 		private static TokenListParser<DiceExpressionToken, IExpression> MultiplyDivide { get; } =
 			Parse.Chain(Multiply.Or(Divide).Or(Modulo), Term, MakeOperation);
