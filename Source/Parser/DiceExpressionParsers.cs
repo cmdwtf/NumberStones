@@ -15,7 +15,6 @@ namespace cmdwtf.NumberStones.Parser
 	{
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Operator(DiceExpressionToken op, BinaryOperationCreationDelegate opType)
 			=> Token.EqualTo(op).Value(opType);
-
 		private static TokenListParser<DiceExpressionToken, UnaryOperationCreationDelegate> Operator(DiceExpressionToken op, UnaryOperationCreationDelegate opType)
 			=> Token.EqualTo(op).Value(opType);
 
@@ -46,6 +45,7 @@ namespace cmdwtf.NumberStones.Parser
 					(Term ?? throw new ParseException($"{nameof(Term)} parser null.")).Try()
 					.Select(nextTerm => MakeOperation(implicitMultiply, subExpression, nextTerm))
 					.OptionalOrDefault(subExpression)
+					.Named("implicit multiply")
 			select expr;
 
 		private static TokenListParser<DiceExpressionToken, IExpression> SubExpression { get; } =
@@ -53,24 +53,27 @@ namespace cmdwtf.NumberStones.Parser
 			from expr in OpenedSubExpression
 			select expr;
 
+		private static TokenListParser<DiceExpressionToken, IExpression> Dice { get; } =
+			from result in Token.EqualTo(DiceExpressionToken.Dice)
+					.Apply(DiceExpressionTextParsers.DiceTerm)
+			select result;
+
 		private static TokenListParser<DiceExpressionToken, IExpression> Constant { get; } =
 			from result in Token.EqualTo(DiceExpressionToken.Constant)
 					.Apply(DiceExpressionTextParsers.ConstantTerm)
 			select result;
 
-
 		private static TokenListParser<DiceExpressionToken, IExpression> Term { get; } =
 			from result in Parse.OneOf(
 				SubExpression,
-				Token.EqualTo(DiceExpressionToken.Dice)
-					.Apply(DiceExpressionTextParsers.DiceTerm)
-					.Try(),
+				Dice.Try(),
 				Negate.Or(Constant)
 				)
 				.Then(lhs =>
 					ImplicitMultiplyRightHandSide.Then(oper =>
 						OpenedSubExpression.Select(rhs => MakeOperation(oper, lhs, rhs))
 					).OptionalOrDefault(lhs)
+					.Named("implicit multiply")
 				)
 			select result;
 
@@ -83,6 +86,9 @@ namespace cmdwtf.NumberStones.Parser
 		private static TokenListParser<DiceExpressionToken, IExpression> AddSubtract { get; } =
 			Parse.Chain(Add.Or(Subtract), MultiplyDivide, MakeOperation);
 
+		/// <summary>
+		/// The entry point to the DiceExpressionParser.
+		/// </summary>
 		internal static TokenListParser<DiceExpressionToken, DiceExpression> Expression { get; } =
 			from expr in AddSubtract.AtEnd()
 			select new DiceExpression(expr);

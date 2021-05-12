@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 using Superpower;
 using Superpower.Model;
@@ -8,16 +9,16 @@ namespace cmdwtf.NumberStones.Parser
 	// #doc
 	internal class DiceParser : IDiceParser
 	{
-		public static bool TryParse(string expression, out DiceExpression result, [MaybeNullWhen(true)] out string error, out Position errorPosition)
+		private static bool TryParse(string expression, out DiceExpression result, [MaybeNullWhen(true)] out string error, out Position errorPosition)
 		{
 			Result<TokenList<DiceExpressionToken>> tokens = DiceExpressionTokenizer.Instance.TryTokenize(expression);
 
 			if (!tokens.HasValue)
 			{
-				result = DiceExpression.Empty();
+				result = DiceExpression.Empty;
 				error = tokens.ToString();
 				errorPosition = tokens.ErrorPosition;
-				System.Diagnostics.Debug.WriteLine($"{nameof(DiceParser)} Tokenize failed: {errorPosition} {error}");
+				Debug.WriteLine($"{nameof(DiceParser)} Tokenize failed: {errorPosition} {error}");
 				return false;
 			}
 
@@ -25,10 +26,10 @@ namespace cmdwtf.NumberStones.Parser
 
 			if (!parsed.HasValue)
 			{
-				result = DiceExpression.Empty();
+				result = DiceExpression.Empty;
 				error = parsed.ToString();
 				errorPosition = parsed.ErrorPosition;
-				System.Diagnostics.Debug.WriteLine($"{nameof(DiceParser)} Parse failed: {errorPosition} {error}");
+				Debug.WriteLine($"{nameof(DiceParser)} Parse failed: {errorPosition} {error}");
 				return false;
 			}
 
@@ -40,8 +41,12 @@ namespace cmdwtf.NumberStones.Parser
 
 		public DiceExpression Parse(string expression)
 		{
-			_ = TryParse(expression, out DiceExpression? result, out string? error, out Position errorPosition);
-			return result ?? throw new Exceptions.DiceExpressionParseException($"{errorPosition}: {error}");
+			if (TryParse(expression, out DiceExpression? result, out string? error, out Position errorPosition))
+			{
+				return result;
+			}
+
+			throw new Exceptions.DiceExpressionParseException($"{errorPosition}: {error}");
 		}
 
 		public bool TryParse(string expression, out DiceExpression result)
@@ -51,7 +56,7 @@ namespace cmdwtf.NumberStones.Parser
 				return true;
 			}
 
-			result = DiceExpression.Empty();
+			result = DiceExpression.Empty;
 
 			return false;
 		}

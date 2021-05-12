@@ -33,10 +33,10 @@ namespace cmdwtf.NumberStones
 		}
 
 		/// <summary>
-		/// Create a DiceExpression that has nothing in it.
+		/// DiceExpression that has nothing in it.
 		/// </summary>
 		/// <returns>An empty dice expression.</returns>
-		public static DiceExpression Empty() => new();
+		public static DiceExpression Empty => new();
 
 		/// <summary>
 		/// Create a DiceExpression with a die that has the specified number of sides
@@ -155,6 +155,11 @@ namespace cmdwtf.NumberStones
 		/// <returns>A DiceResult representing the results of this Roll</returns>
 		public DiceResult Roll(IDieRoller roller)
 		{
+			if (IsEmpty)
+			{
+				throw new Exceptions.ImpossibleDieException($"This {nameof(DiceExpression)} has no expression to evaluate.");
+			}
+
 			Roller = roller;
 			ExpressionResult results = (this as IExpression).Evaluate();
 			return new DiceResult(results, roller);

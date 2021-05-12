@@ -7,16 +7,33 @@ using cmdwtf.NumberStones.DiceTypes;
 using cmdwtf.NumberStones.Options;
 using cmdwtf.NumberStones.Parser;
 
+using Superpower.Model;
+
 namespace cmdwtf.NumberStones
 {
-	// #doc
+	/// <summary>
+	/// A record representing the options and settings for a Die or Dice.
+	/// </summary>
 	public record DiceSettings(decimal SidesReal, decimal MultiplicityReal = 1m, DiceType Kind = DiceType.Polyhedron)
 	{
+		/// <summary>
+		/// A string representing no additional dice options.
+		/// </summary>
 		public const string NoOptions = "";
 
+		/// <summary>
+		/// An integer number for the number of sides the dice has.
+		/// </summary>
 		public int Sides => (int)Math.Truncate(ModeSides);
+
+		/// <summary>
+		/// An integer value of how many dice should be rolled.
+		/// </summary>
 		public int Multiplicity => (int)Math.Truncate(MultiplicityReal);
 
+		/// <summary>
+		/// The number of sides for the dice, specifically adjusted for unique types.
+		/// </summary>
 		private decimal ModeSides => Kind switch
 		{
 			DiceType.Coin => 2,
@@ -25,6 +42,10 @@ namespace cmdwtf.NumberStones
 			_ => SidesReal,
 		};
 
+		/// <summary>
+		/// A string representing the number (or type) of sides for the dice.
+		/// It may be a non-digit if the dice is a special type.
+		/// </summary>
 		public string SidesString => Kind switch
 		{
 			DiceType.Coin => DiceTextParsers.CoinSide,
@@ -34,6 +55,9 @@ namespace cmdwtf.NumberStones
 		};
 
 		private readonly List<IDiceOption> _options = new();
+		/// <summary>
+		/// The options for the dice.
+		/// </summary>
 		public IReadOnlyList<IDiceOption> Options => _options.AsReadOnly();
 
 		internal IDiceOption[] ParsedOptions
@@ -44,6 +68,9 @@ namespace cmdwtf.NumberStones
 			}
 		}
 
+		/// <summary>
+		/// A string representing the options on the dice, in dice syntax.
+		/// </summary>
 		public string OptionString
 		{
 			get => BuildOptionString();
@@ -55,100 +82,30 @@ namespace cmdwtf.NumberStones
 					return;
 				}
 
-				char[] optionChars = value.ToCharArray();
+				Result<IDiceOption[]> result = DiceTextParsers.DiceOptions.Invoke(new TextSpan(value));
 
-				for (int scan = 0; scan < optionChars.Length; ++scan)
+				if (result.HasValue)
 				{
-					switch (optionChars[scan])
-					{
-						case '!':
-							ParseExploding(optionChars, ref scan);
-							break;
-						case 'd':
-							// drop
-							break;
-						case 'k':
-							// keep
-							break;
-						case 'c':
-							// crit
-							break;
-						case 'r':
-							// reroll
-							break;
-						case 't':
-							// twice
-							break;
-						case '=':
-						case '>':
-						case '<':
-						case '~':
-							// comparison
-							break;
-						case '[':
-							// label
-							break;
-						default:
-							throw new Exceptions.DiceExpressionOptionParseException($"Unhandled option character: {optionChars[scan]}", value);
-					}
+					_options.AddRange(result.Value);
 				}
 			}
 		}
 
-		private static int ParseNextInt(char[] chars, ref int scan)
-		{
-			string subString = new(chars, scan, 32);
-			int result = int.Parse(subString);
-
-			while (char.IsDigit(chars[scan]))
-			{
-				++scan;
-				if (scan >= chars.Length)
-				{
-					break;
-				}
-			}
-
-			return result;
-		}
-
-		private static (ExplodingDiceMode mode, int target) ParseExploding(char[] optionChars, ref int scan)
-		{
-			char next = (scan + 1 < optionChars.Length) ? char.ToLowerInvariant(optionChars[scan + 1]) : '\0';
-			char nextNext = (scan + 2 < optionChars.Length) ? char.ToLowerInvariant(optionChars[scan + 2]) : '\0';
-
-			ExplodingDiceMode mode = ExplodingDiceMode.Classic;
-			int target = 0;
-
-			switch (next)
-			{
-				case '!':
-					mode = ExplodingDiceMode.Compound;
-					scan++;
-					break;
-				case 'p':
-					mode = ExplodingDiceMode.Penetrating;
-					scan++;
-					break;
-			}
-
-			switch (nextNext)
-			{
-				case '>':
-					++scan;
-					target = ParseNextInt(optionChars, ref scan);
-					break;
-			}
-
-			return (mode, target);
-		}
-
+		/// <summary>
+		/// Creates a new DiceSettings with the specified sides and mulitiplicity
+		/// </summary>
+		/// <param name="sides">The number of sides the dice has</param>
+		/// <param name="multiplicity">How many of the dice to roll</param>
 		public DiceSettings(int sides, int multiplicity)
 			: this(Convert.ToDecimal(sides), Convert.ToDecimal(multiplicity))
 		{
 
 		}
 
+		/// <summary>
+		/// Builds a dice syntax options string based on all the options present.
+		/// </summary>
+		/// <returns>A string representing all of the options present that can be put in syntax.</returns>
 		private string BuildOptionString()
 		{
 			StringBuilder builder = new();
@@ -161,7 +118,10 @@ namespace cmdwtf.NumberStones
 			return builder.ToString();
 		}
 
-		public override string ToString()
-			=> $"{MultiplicityReal}d{SidesString}{OptionString}";
+		/// <summary>
+		/// Returns a string representing this DiceSettings
+		/// </summary>
+		/// <returns>A string representing this DiceSettings</returns>
+		public override string ToString() => $"{MultiplicityReal}d{SidesString}{OptionString}";
 	}
 }

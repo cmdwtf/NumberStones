@@ -4,28 +4,36 @@ using cmdwtf.NumberStones.Rollers;
 namespace cmdwtf.NumberStones
 {
 	/// <summary>
-	/// The Dice class is a static class that has convenience methods for parsing and rolling dice
+	/// The Dice class is a static class that has convenience methods for parsing and rolling dice.
+	/// As well, it contains some shortcuts for starting fleuent dice expressions.
 	/// </summary>
 	public static class Dice
 	{
-		// #doc
+		/// <summary>
+		/// Creates a dice expression with multiple dice
+		/// </summary>
+		/// <param name="sides">The number of sides the dice have</param>
+		/// <param name="numberOfDice">The number of dice to roll</param>
+		/// <returns>The expression</returns>
 		public static DiceExpression Multiple(int sides, int numberOfDice)
 			=> DiceExpression.Dice(sides, numberOfDice);
 
-		// #doc
+		/// <summary>
+		/// Creates a dice expression for a single die
+		/// </summary>
+		/// <param name="sides">The number of sides the die has</param>
+		/// <returns>The expression</returns>
 		public static DiceExpression Single(int sides)
 			=> DiceExpression.Dice(sides, 1);
-
-		// #split
 
 		private static readonly IDiceParser _diceParser = new DiceParser();
 
 		/// <summary>
-		/// Parse the specified string into a DiceExpression
+		/// Parse the specified string into a DiceExpression.
 		/// </summary>
 		/// <param name="expression">The string dice expression to parse. Ex. 3d6+4</param>
 		/// <returns>A DiceExpression representing the parsed string</returns>
-		/// <exception cref="Exceptions.DiceExpressionParseException">If the parse fails</exception>
+		/// <exception cref="Exceptions.DiceExpressionParseException">If the dice expression fails to parse</exception>
 		public static DiceExpression Parse(string expression) => _diceParser.Parse(expression);
 
 		/// <summary>
