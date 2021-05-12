@@ -38,7 +38,7 @@ namespace cmdwtf.NumberStones.Options
 
 		private IEnumerable<DiceExpressionResult> ExplodeRoll(decimal target, DiceExpressionResult r, IDieRoller roller)
 		{
-			List<DiceExpressionResult> explodedResults = new List<DiceExpressionResult>();
+			List<DiceExpressionResult> explodedResults = new();
 
 			int explodedRoll;
 			int explodedTotal = 0;
@@ -54,8 +54,8 @@ namespace cmdwtf.NumberStones.Options
 				// penetrating rolls lose 1 when exploding.
 				int actualRollValue = Type == ExplodingDiceMode.Penetrating ? explodedRoll - 1 : explodedRoll;
 
-				if (Type == ExplodingDiceMode.Classic ||
-					Type == ExplodingDiceMode.Penetrating)
+				if (Type is ExplodingDiceMode.Classic or
+					ExplodingDiceMode.Penetrating)
 				{
 					yield return new DiceExpressionResult()
 					{
