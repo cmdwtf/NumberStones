@@ -8,5 +8,9 @@ namespace cmdwtf.NumberStones.Expression
 		/// This result represents a fate expression result.
 		/// </summary>
 		public override DiceType Type { get; init; } = DiceType.Fudge;
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceExpressionResult.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }

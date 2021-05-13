@@ -6,6 +6,11 @@
 	public record ExpressionResult
 	{
 		/// <summary>
+		/// An empty expression result
+		/// </summary>
+		public static ExpressionResult Empty { get; } = new() { TermType = "?" };
+
+		/// <summary>
 		/// The total for this term
 		/// </summary>
 		public decimal Value { get; init; } = 0m;
@@ -21,10 +26,5 @@
 		/// </summary>
 		/// <returns>A string representing this expression result</returns>
 		public override string ToString() => $"{Value} ({TermType})";
-
-		/// <summary>
-		/// An empty expression result
-		/// </summary>
-		public static ExpressionResult Empty { get; } = new() { TermType = "?" };
 	}
 }

@@ -34,5 +34,9 @@ namespace cmdwtf.NumberStones.Expression
 		/// The number of sides that this dice term had.
 		/// </summary>
 		public decimal Sides { get; init; } = 0;
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceExpressionResult.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }
