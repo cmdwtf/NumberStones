@@ -13,8 +13,9 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// Gets the TermResult for this ConstantTerm which will always be a single result with a value of the constant.
 		/// </summary>
+		/// <param name="context">The evaluation context</param>
 		/// <returns>A TermResult which will always have a single result with value of the constant</returns>
-		public override ExpressionResult Evaluate()
+		public override ExpressionResult Evaluate(EvaluationContext context)
 			=> new()
 			{
 				Value = Constant,

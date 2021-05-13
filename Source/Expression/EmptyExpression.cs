@@ -8,8 +8,9 @@
 		/// <summary>
 		/// Evaluates the empty expression, returning, as you may expect: an empty expression result.
 		/// </summary>
-		/// <returns></returns>
-		public ExpressionResult Evaluate() => ExpressionResult.Empty;
+		/// <param name="context">The evaluation context</param>
+		/// <returns>An empty expression</returns>
+		public ExpressionResult Evaluate(EvaluationContext context) => ExpressionResult.Empty;
 
 		/// <summary>
 		/// An instance to easily access an empty expression

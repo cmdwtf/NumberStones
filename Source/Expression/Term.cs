@@ -1,13 +1,21 @@
-﻿using cmdwtf.NumberStones.Rollers;
-
-namespace cmdwtf.NumberStones.Expression
+﻿namespace cmdwtf.NumberStones.Expression
 {
+	/// <summary>
+	/// An abstract start to a concrete ITerm
+	/// </summary>
 	public abstract record Term : ITerm
 	{
-		public IDieRoller Roller { protected get; set; } = Instances.DefaultRoller;
+		/// <summary>
+		/// Evaluates the term and gets the expression result for the evaluation
+		/// </summary>
+		/// <param name="context">The evaluation context</param>
+		/// <returns>The evaluated result</returns>
+		public abstract ExpressionResult Evaluate(EvaluationContext context);
 
-		public abstract ExpressionResult Evaluate();
-
+		/// <summary>
+		/// Gets a string representing this term. Implementers should override thisl.
+		/// </summary>
+		/// <returns>A string with the term's class name</returns>
 		public override string ToString() => GetType().Name;
 	}
 }

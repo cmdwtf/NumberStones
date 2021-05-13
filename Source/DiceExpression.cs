@@ -11,9 +11,6 @@ namespace cmdwtf.NumberStones
 	/// </summary>
 	public sealed class DiceExpression : ITerm
 	{
-		/// <inheritdoc cref="ITerm.Roller"/>
-		public IDieRoller Roller { private get; set; } = Instances.DefaultRoller;
-
 		private IExpression _expression = EmptyExpression.Instance;
 
 		public bool IsEmpty { get; private set; } = true;
@@ -214,8 +211,8 @@ namespace cmdwtf.NumberStones
 				throw new Exceptions.ImpossibleDieException($"This {nameof(DiceExpression)} has no expression to evaluate.");
 			}
 
-			Roller = roller;
-			ExpressionResult results = (this as IExpression).Evaluate();
+			EvaluationContext context = new(roller);
+			ExpressionResult results = (this as IExpression).Evaluate(context);
 			return new DiceResult(results, roller);
 		}
 
@@ -242,8 +239,9 @@ namespace cmdwtf.NumberStones
 		/// <summary>
 		/// Evaluates the whole expression and returns it's value as a TermResult.
 		/// </summary>
-		/// <returns>The evaluated expression's result.</returns>
-		ExpressionResult IExpression.Evaluate() => _expression.Evaluate();
+		/// <param name="context">The evaluation context</param>
+		/// <returns>The evaluated expression's result</returns>
+		ExpressionResult IExpression.Evaluate(EvaluationContext context) => _expression.Evaluate(context);
 
 
 		/// <summary>

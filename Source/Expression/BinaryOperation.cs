@@ -11,10 +11,13 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// Executes the operation on the operands
 		/// </summary>
-		/// <returns>The result of the operation</returns>
-		public ExpressionResult Evaluate()
+		/// <param name="context">The evaluation context</param>
+		/// <returns>The evaluated expression's result</returns>
+		public ExpressionResult Evaluate(EvaluationContext context)
 		{
-			ExpressionResult result = Operator(LeftOperand, RightOperand);
+			ExpressionResult leftResult = LeftOperand.Evaluate(context);
+			ExpressionResult rightResult = RightOperand.Evaluate(context);
+			ExpressionResult result = Operator(leftResult, rightResult);
 			return result;
 		}
 

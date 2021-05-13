@@ -13,14 +13,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// </summary>
 		/// <param name="operand">The operand to negate</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Negate(IExpression operand)
+		public static ExpressionResult Negate(ExpressionResult operand)
 		{
-			ExpressionResult operandResult = operand.Evaluate();
-
 			return new ArithmeticExpressionResult(operand)
 			{
-				Value = -operandResult.Value,
-				TermType = operandResult.TermType
+				Value = -operand.Value,
+				TermType = $"-{operand.TermType}"
 			};
 		}
 	}

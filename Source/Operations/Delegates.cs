@@ -2,6 +2,6 @@
 
 namespace cmdwtf.NumberStones.Operations
 {
-	public delegate ExpressionResult UnaryOperator(IExpression operand);
-	public delegate ExpressionResult BinaryOperator(IExpression leftOperand, IExpression rightOperand);
+	public delegate ExpressionResult UnaryOperator(ExpressionResult operand);
+	public delegate ExpressionResult BinaryOperator(ExpressionResult leftOperand, ExpressionResult rightOperand);
 }

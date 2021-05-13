@@ -90,8 +90,9 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// Gets the TermResult for this DiceTerm which will include the random value rolled
 		/// </summary>
+		/// <param name="context">The evaluation context</param>
 		/// <returns>An IEnumerable of TermResult which will have one item per die rolled</returns>
-		public override ExpressionResult Evaluate()
+		public override ExpressionResult Evaluate(EvaluationContext context)
 		{
 			if (Multiplicity == 0)
 			{
@@ -106,7 +107,7 @@ namespace cmdwtf.NumberStones.Expression
 			{
 				return new DiceExpressionResult()
 				{
-					Value = Roller.RollDie(Sides),
+					Value = context.Roller.RollDie(Sides),
 					Sides = Sides,
 					TermType = $"d{Sides}"
 				};
@@ -114,7 +115,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			IEnumerable<DiceExpressionResult> results =
 				from i in Enumerable.Range(0, Multiplicity)
-				let roll = Roller.RollDie(Sides)
+				let roll = context.Roller.RollDie(Sides)
 				select new DiceExpressionResult()
 				{
 					Value = roll,
@@ -126,7 +127,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			foreach (IDiceOption option in Settings.Options)
 			{
-				results = option.Apply(results, Roller);
+				results = option.Apply(results, context.Roller);
 			}
 
 			return new MultipleTermResult(results)

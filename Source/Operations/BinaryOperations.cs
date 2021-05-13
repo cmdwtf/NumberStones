@@ -15,15 +15,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// <param name="leftOperand">The left operand</param>
 		/// <param name="rightOperand">The right operand</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Add(IExpression leftOperand, IExpression rightOperand)
+		public static ExpressionResult Add(ExpressionResult leftOperand, ExpressionResult rightOperand)
 		{
-			ExpressionResult leftResult = leftOperand.Evaluate();
-			ExpressionResult rightResult = rightOperand.Evaluate();
-
 			return new ArithmeticExpressionResult(leftOperand, rightOperand)
 			{
-				Value = leftResult.Value + rightResult.Value,
-				TermType = $"{leftResult.TermType} + {rightResult.TermType}"
+				Value = leftOperand.Value + rightOperand.Value,
+				TermType = $"{leftOperand.TermType} + {rightOperand.TermType}"
 			};
 		}
 
@@ -33,15 +30,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// <param name="leftOperand">The left operand</param>
 		/// <param name="rightOperand">The right operand</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Subtract(IExpression leftOperand, IExpression rightOperand)
+		public static ExpressionResult Subtract(ExpressionResult leftOperand, ExpressionResult rightOperand)
 		{
-			ExpressionResult leftResult = leftOperand.Evaluate();
-			ExpressionResult rightResult = rightOperand.Evaluate();
-
 			return new ArithmeticExpressionResult(leftOperand, rightOperand)
 			{
-				Value = leftResult.Value - rightResult.Value,
-				TermType = $"{leftResult.TermType} - {rightResult.TermType}"
+				Value = leftOperand.Value - rightOperand.Value,
+				TermType = $"{leftOperand.TermType} - {rightOperand.TermType}"
 			};
 		}
 
@@ -51,15 +45,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// <param name="leftOperand">The left operand</param>
 		/// <param name="rightOperand">The right operand</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Multiply(IExpression leftOperand, IExpression rightOperand)
+		public static ExpressionResult Multiply(ExpressionResult leftOperand, ExpressionResult rightOperand)
 		{
-			ExpressionResult leftResult = leftOperand.Evaluate();
-			ExpressionResult rightResult = rightOperand.Evaluate();
-
 			return new ArithmeticExpressionResult(leftOperand, rightOperand)
 			{
-				Value = leftResult.Value * rightResult.Value,
-				TermType = $"{leftResult.TermType} * {rightResult.TermType}"
+				Value = leftOperand.Value * rightOperand.Value,
+				TermType = $"{leftOperand.TermType} * {rightOperand.TermType}"
 			};
 		}
 
@@ -69,15 +60,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// <param name="leftOperand">The left operand</param>
 		/// <param name="rightOperand">The right operand</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Divide(IExpression leftOperand, IExpression rightOperand)
+		public static ExpressionResult Divide(ExpressionResult leftOperand, ExpressionResult rightOperand)
 		{
-			ExpressionResult leftResult = leftOperand.Evaluate();
-			ExpressionResult rightResult = rightOperand.Evaluate();
-
 			return new ArithmeticExpressionResult(leftOperand, rightOperand)
 			{
-				Value = leftResult.Value / rightResult.Value,
-				TermType = $"{leftResult.TermType} / {rightResult.TermType}"
+				Value = leftOperand.Value / rightOperand.Value,
+				TermType = $"{leftOperand.TermType} / {rightOperand.TermType}"
 			};
 		}
 
@@ -87,15 +75,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// <param name="leftOperand">The left operand</param>
 		/// <param name="rightOperand">The right operand</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Modulo(IExpression leftOperand, IExpression rightOperand)
+		public static ExpressionResult Modulo(ExpressionResult leftOperand, ExpressionResult rightOperand)
 		{
-			ExpressionResult leftResult = leftOperand.Evaluate();
-			ExpressionResult rightResult = rightOperand.Evaluate();
-
 			return new ArithmeticExpressionResult(leftOperand, rightOperand)
 			{
-				Value = leftResult.Value % rightResult.Value,
-				TermType = $"{leftResult.TermType} % {rightResult.TermType}"
+				Value = leftOperand.Value % rightOperand.Value,
+				TermType = $"{leftOperand.TermType} % {rightOperand.TermType}"
 			};
 		}
 
@@ -105,15 +90,12 @@ namespace cmdwtf.NumberStones.Operations
 		/// <param name="leftOperand">The left operand</param>
 		/// <param name="rightOperand">The right operand</param>
 		/// <returns>The result of the operation</returns>
-		public static ExpressionResult Power(IExpression leftOperand, IExpression rightOperand)
+		public static ExpressionResult Power(ExpressionResult leftOperand, ExpressionResult rightOperand)
 		{
-			ExpressionResult leftResult = leftOperand.Evaluate();
-			ExpressionResult rightResult = rightOperand.Evaluate();
-
 			return new ArithmeticExpressionResult(leftOperand, rightOperand)
 			{
-				Value = (decimal)Math.Pow((double)leftResult.Value, (double)rightResult.Value),
-				TermType = $"{leftResult.TermType}^{rightResult.TermType}"
+				Value = (decimal)Math.Pow((double)leftOperand.Value, (double)rightOperand.Value),
+				TermType = $"{leftOperand.TermType}^{rightOperand.TermType}"
 			};
 		}
 	}
