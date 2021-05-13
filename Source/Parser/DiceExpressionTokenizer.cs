@@ -49,6 +49,7 @@ namespace cmdwtf.NumberStones.Parser
 				.Ignore(Span.WhiteSpace)
 				.Match(Character.EqualTo(OpenSubExpression), DiceExpressionToken.ParenthesisLeft)
 				.Match(Character.EqualTo(CloseSubExpression), DiceExpressionToken.ParenthesisRight)
+				.Match(Character.EqualTo(ExponentOperator), DiceExpressionToken.Exponent)
 				.Match(Character.EqualTo(MultiplyOperator), DiceExpressionToken.Multiply)
 				.Match(Character.EqualTo(DivideOperator), DiceExpressionToken.Divide)
 				.Match(Character.EqualTo(AddOperator), DiceExpressionToken.Add)

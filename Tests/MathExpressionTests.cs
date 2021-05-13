@@ -73,6 +73,22 @@ namespace cmdwtf.NumberStones.Tests
 		}
 
 		[DataTestMethod]
+		[DataRow("2^2", 4)]
+		[DataRow("5^2", 25)]
+		[DataRow("5^5", 3125)]
+		[DataRow("10^2d1", 100)] // should work with dice,
+		[DataRow("2d1^10", 1024)] // on either side
+		public void ExponentPowerCorrect(string input, int expected)
+		{
+			DiceExpression? expression = Dice.Parse(input);
+			Assert.IsNotNull(expression);
+			Assert.IsFalse(expression.IsEmpty);
+			DiceResult result = expression.Roll();
+			Tools.Write(input, expression, result, expected);
+			Assert.IsTrue((int)result.Value == expected);
+		}
+
+		[DataTestMethod]
 		[DataRow("5 + 5 * 6", 35)]
 		[DataRow("5 * (5 + 5)", 50)]
 		[DataRow("8 - 8 / 4 * 2 + 7", 11)]

@@ -32,6 +32,8 @@ namespace cmdwtf.NumberStones.Parser
 			Operator(DiceExpressionToken.Divide, BinaryOperation.Divide);
 		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> Modulo { get; } =
 			Operator(DiceExpressionToken.Modulo, BinaryOperation.Modulo);
+		private static TokenListParser<DiceExpressionToken, BinaryOperationCreationDelegate> ToPower { get; } =
+			Operator(DiceExpressionToken.Exponent, BinaryOperation.Power);
 
 		private static TokenListParser<DiceExpressionToken, IExpression> Negate { get; } =
 			from operation in Operator(DiceExpressionToken.Subtract, UnaryOperation.Negate)
@@ -80,11 +82,15 @@ namespace cmdwtf.NumberStones.Parser
 		private static IExpression MakeOperation(BinaryOperationCreationDelegate op, IExpression left, IExpression right)
 			=> op(left, right);
 
+		private static TokenListParser<DiceExpressionToken, IExpression> Exponent { get; } =
+			Parse.Chain(ToPower, Term, MakeOperation);
+
 		private static TokenListParser<DiceExpressionToken, IExpression> MultiplyDivide { get; } =
-			Parse.Chain(Multiply.Or(Divide).Or(Modulo), Term, MakeOperation);
+			Parse.Chain(Multiply.Or(Divide).Or(Modulo), Exponent, MakeOperation);
 
 		private static TokenListParser<DiceExpressionToken, IExpression> AddSubtract { get; } =
 			Parse.Chain(Add.Or(Subtract), MultiplyDivide, MakeOperation);
+
 		internal static TokenListParser<DiceExpressionToken, string> ExpressionComment { get; } =
 			Token.EqualTo(DiceExpressionToken.Comment)
 				.AtEnd().Try()

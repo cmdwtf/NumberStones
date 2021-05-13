@@ -15,18 +15,20 @@
 		public const string OpenParentheses = "(";
 		internal const char _closeParentheses = ')';
 		public const string CloseParentheses = ")";
-		internal const char _equals = '=';
-		public new const string Equals = "=";
+		internal const char _caret = '^';
+		public const string Caret = "^";
 		internal const char _asterisk = '*';
 		public const string Asterisk = "*";
 		internal const char _slash = '/';
 		public const string Slash = "/";
+		internal const char _percent = '%';
+		public const string Percent = "%";
 		internal const char _plus = '+';
 		public const string Plus = "+";
 		internal const char _minus = '-';
 		public const string Minus = "-";
-		internal const char _percent = '%';
-		public const string Percent = "%";
+		internal const char _equals = '=';
+		public new const string Equals = "=";
 		internal const char _octothorpe = '#';
 		public const string Octothorpe = "#";
 
@@ -37,6 +39,8 @@
 		public const string CloseSubExpressionString = CloseParentheses;
 
 		// operators
+		public const char ExponentOperator = _caret;
+		public const string ExponentOperatorString = Caret;
 		public const char MultiplyOperator = _asterisk;
 		public const string MultiplyOperatorString = Asterisk;
 		public const char DivideOperator = _slash;
