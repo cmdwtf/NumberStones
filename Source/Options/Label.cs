@@ -9,7 +9,7 @@ namespace cmdwtf.NumberStones.Options
 	/// <summary>
 	/// An option representing a piece of arbitrary text attached to a dice expression term
 	/// </summary>
-	public record Label(string Value) : IDiceOption<string>
+	public record Label(string Value) : DiceOptionBase<string>(Value)
 	{
 		/// <summary>
 		/// The symbol to open this option
@@ -21,14 +21,14 @@ namespace cmdwtf.NumberStones.Options
 		public const char SymbolClose = ']';
 
 		/// <inheritdoc cref="IDiceOption.Name"/>
-		public string Name => nameof(Label);
+		public override string Name => nameof(Label);
 
 		/// <inheritdoc cref="IDiceOption.Apply(IEnumerable{DiceExpressionResult}, IDieRoller)"/>
-		public IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
+		public override IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
 			=> input;
 
 		/// <inheritdoc cref="IDiceOption.BuildOptionString(StringBuilder)"/>
-		public void BuildOptionString(StringBuilder builder)
+		public override void BuildOptionString(StringBuilder builder)
 		{
 			if (string.IsNullOrWhiteSpace(Value))
 			{
@@ -37,5 +37,8 @@ namespace cmdwtf.NumberStones.Options
 
 			builder.Append($"{SymbolOpen}{Value}{SymbolClose}");
 		}
+
+		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }

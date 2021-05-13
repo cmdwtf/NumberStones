@@ -16,6 +16,18 @@ namespace cmdwtf.NumberStones.Parser
 	/// </summary>
 	internal static class DiceExpressionTokenizer
 	{
+		public static TextParser<Unit> DiceInlineLabel { get; } =
+			from open in Character.EqualTo(Options.Label.SymbolOpen)
+			from content in Character.ExceptIn(Options.Label.SymbolClose).Many()
+			from close in Character.EqualTo(Options.Label.SymbolClose)
+			select Unit.Value;
+
+		private static TextParser<Unit> Constant { get; } =
+			from val in Numerics.Decimal
+			from _ in Span.WhiteSpace.IgnoreMany().Try()
+			from labels in DiceInlineLabel.Many().Try()
+			select Unit.Value;
+
 		private static TextParser<Unit> Dice { get; } =
 			from first in Character.Digit.Or(DiceSeperatorCharacter).AtLeastOnce()
 			from rest in Parse.OneOf(
@@ -39,7 +51,7 @@ namespace cmdwtf.NumberStones.Parser
 				.Match(Character.EqualTo(SubtractOperator), DiceExpressionToken.Subtract)
 				.Match(Character.EqualTo(ModuloOperator), DiceExpressionToken.Modulo)
 				.Match(Character.EqualTo(OpenComment), DiceExpressionToken.Comment)
-				.Match(Numerics.Decimal, DiceExpressionToken.Constant, requireDelimiters: true)
+				.Match(Constant, DiceExpressionToken.Constant, requireDelimiters: true)
 				.Match(Dice, DiceExpressionToken.Dice, requireDelimiters: true)
 				.Match(Identifier.CStyle, DiceExpressionToken.None, requireDelimiters: true)
 				.Build();

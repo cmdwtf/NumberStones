@@ -11,10 +11,6 @@
 			public const string Other = "other";
 		}
 
-		internal const char _openBracket = '[';
-		public const string OpenBracket = "[";
-		internal const char _closeBracket = ']';
-		public const string CloseBracket = "]";
 		internal const char _openParentheses = '(';
 		public const string OpenParentheses = "(";
 		internal const char _closeParentheses = ')';
@@ -39,11 +35,6 @@
 		public const string OpenSubExpressionString = OpenParentheses;
 		public const char CloseSubExpression = _closeParentheses;
 		public const string CloseSubExpressionString = CloseParentheses;
-
-		public const char OpenLabel = _openBracket;
-		public const string OpenLabelString = OpenBracket;
-		public const char CloseLabel = _closeBracket;
-		public const string CloseLabelString = CloseBracket;
 
 		// operators
 		public const char MultiplyOperator = _asterisk;

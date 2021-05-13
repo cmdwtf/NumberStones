@@ -83,6 +83,7 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("5[CHA]", "5[CHA]")]
 		[DataRow("1+2[Guidance]", "1 + 2[Guidance]")]
 		[DataRow("1+2   [Guidance]", "1 + 2[Guidance]")] // spaces after constant shouldn't matter
+		[DataRow("1+2   [Guidance is just powerful butt touches]", "1 + 2[Guidance is just powerful butt touches]")] // spaces inside shouldn't matter
 		public void ConstantsCanHaveLabels(string input, string expected) => ParseAndCheckExpected(input, expected);
 
 		[TestMethod]

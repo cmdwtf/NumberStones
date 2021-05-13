@@ -112,7 +112,7 @@ namespace cmdwtf.NumberStones.Parser
 			from val in Numerics.DecimalDecimal.OptionalOrDefault(1m)
 			select new Keep(val, mode) as IDiceOption;
 
-		private static TextParser<IDiceOption> LabelOption { get; } =
+		internal static TextParser<IDiceOption> LabelOption { get; } =
 			from open in Character.EqualToIgnoreCase(Label.SymbolOpen)
 			from text in Character.Except(Label.SymbolClose).Many()
 			from close in Character.EqualToIgnoreCase(Label.SymbolClose)

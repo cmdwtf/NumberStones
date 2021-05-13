@@ -3,7 +3,6 @@
 using cmdwtf.NumberStones.Expression;
 
 using Superpower;
-using Superpower.Model;
 using Superpower.Parsers;
 
 namespace cmdwtf.NumberStones.Parser
@@ -43,13 +42,6 @@ namespace cmdwtf.NumberStones.Parser
 		public static TextParser<char> DiceOptionCharacter { get; } =
 			Character.In(DiceOptionChars);
 
-		public static TextParser<Unit> DiceInlineLabel { get; } =
-			from open in Character.EqualTo(DiceExpressionTokenConstants.OpenLabel)
-			from content in Character.ExceptIn(DiceExpressionTokenConstants.CloseLabel).Many()
-			from close in Character.EqualTo(DiceExpressionTokenConstants.CloseLabel)
-			select Unit.Value;
-
-
 		public static TextParser<IExpression> DiceTerm { get; } =
 			from term in DiceTermTextParsers.DiceTerm
 			select term as IExpression;
@@ -57,6 +49,12 @@ namespace cmdwtf.NumberStones.Parser
 		public static TextParser<IExpression> ConstantTerm { get; } =
 			from value in Span.MatchedBy(Numerics.Decimal)
 				.Apply(Numerics.DecimalDecimal)
-			select new ConstantTerm(value) as IExpression;
+			from _ in Span.WhiteSpace.IgnoreMany().Try()
+			from labels in DiceTermTextParsers.LabelOption.Many().Try()
+			select new ConstantTerm(value)
+			{
+				Labels = labels?.Cast<Options.Label>().ToArray()
+					?? System.Array.Empty<Options.Label>()
+			} as IExpression;
 	}
 }

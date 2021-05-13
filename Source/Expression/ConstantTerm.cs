@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 
 namespace cmdwtf.NumberStones.Expression
 {
@@ -10,6 +12,16 @@ namespace cmdwtf.NumberStones.Expression
 	/// </remarks>
 	public record ConstantTerm(decimal Constant) : Term
 	{
+		/// <summary>
+		/// Labels associated with this constant.
+		/// </summary>
+		public Options.Label[] Labels { get; init; } = Array.Empty<Options.Label>();
+
+		/// <summary>
+		/// Generates a string that would appear in an expression.
+		/// </summary>
+		protected string LabelString => string.Join("", Labels.Select(l => l.ToString()));
+
 		/// <summary>
 		/// Gets the TermResult for this ConstantTerm which will always be a single result with a value of the constant.
 		/// </summary>
@@ -26,6 +38,6 @@ namespace cmdwtf.NumberStones.Expression
 		/// Returns a string that represents this ConstantTerm
 		/// </summary>
 		/// <returns>A string representing this ConstantTerm</returns>
-		public override string ToString() => Constant.ToString(CultureInfo.CurrentCulture);
+		public override string ToString() => $"{Constant.ToString(CultureInfo.CurrentCulture)}{LabelString}";
 	}
 }
