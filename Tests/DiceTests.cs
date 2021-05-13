@@ -78,5 +78,21 @@ namespace cmdwtf.NumberStones.Tests
 			Tools.Write(input, expression, result, expectedExpression);
 			Assert.IsTrue(result.Value >= minResult.Value && result.Value <= maxResult.Value);
 		}
+
+		[DataTestMethod]
+		[DataRow("1d6!")]
+		[DataRow("1d6!!")]
+		[DataRow("1d6!p")]
+		[DataRow("1d1!")]
+		[DataRow("1d1!!")]
+		[DataRow("1d1!p")]
+		public void ExplodingDiceDontOverflow(string input)
+		{
+			DiceExpression? expression = Dice.Parse(input);
+			Assert.IsNotNull(expression);
+			Assert.IsFalse(expression.IsEmpty);
+			DiceResult maxRoll = expression.Roll(Rollers.Instances.MaxRoller);
+			Tools.Write(input, expression, maxRoll);
+		}
 	}
 }

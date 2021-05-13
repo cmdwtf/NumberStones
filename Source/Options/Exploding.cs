@@ -56,7 +56,7 @@ namespace cmdwtf.NumberStones.Options
 			// if the roller's range is 0, it will be returning
 			// the same value that got us exploding in the first place,
 			// and thus we can safely return with a fixed high value.
-			if (roller.Range == 0)
+			if (roller.Range == 0 || r.Sides <= 1)
 			{
 				yield return new()
 				{
