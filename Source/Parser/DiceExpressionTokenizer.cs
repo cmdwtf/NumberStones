@@ -21,6 +21,10 @@ namespace cmdwtf.NumberStones.Parser
 			from content in Character.ExceptIn(Options.Label.SymbolClose).Many()
 			from close in Character.EqualTo(Options.Label.SymbolClose)
 			select Unit.Value;
+		private static TextParser<Unit> Comment { get; } =
+			from open in Character.EqualTo(OpenComment)
+			from rest in Character.AnyChar.Many()
+			select Unit.Value;
 
 		private static TextParser<Unit> Constant { get; } =
 			from val in Numerics.Decimal
@@ -50,7 +54,7 @@ namespace cmdwtf.NumberStones.Parser
 				.Match(Character.EqualTo(AddOperator), DiceExpressionToken.Add)
 				.Match(Character.EqualTo(SubtractOperator), DiceExpressionToken.Subtract)
 				.Match(Character.EqualTo(ModuloOperator), DiceExpressionToken.Modulo)
-				.Match(Character.EqualTo(OpenComment), DiceExpressionToken.Comment)
+				.Match(Comment, DiceExpressionToken.Comment)
 				.Match(Constant, DiceExpressionToken.Constant, requireDelimiters: true)
 				.Match(Dice, DiceExpressionToken.Dice, requireDelimiters: true)
 				.Match(Identifier.CStyle, DiceExpressionToken.None, requireDelimiters: true)

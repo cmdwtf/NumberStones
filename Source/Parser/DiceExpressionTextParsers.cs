@@ -42,6 +42,12 @@ namespace cmdwtf.NumberStones.Parser
 		public static TextParser<char> DiceOptionCharacter { get; } =
 			Character.In(DiceOptionChars);
 
+		public static TextParser<string> Comment { get; } =
+			from open in Character.EqualTo(DiceExpressionTokenConstants.OpenComment)
+			from comment in Character.AnyChar.Many()
+			select new string(comment).Trim();
+
+
 		public static TextParser<IExpression> DiceTerm { get; } =
 			from term in DiceTermTextParsers.DiceTerm
 			select term as IExpression;

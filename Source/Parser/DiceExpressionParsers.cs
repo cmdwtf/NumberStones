@@ -85,12 +85,23 @@ namespace cmdwtf.NumberStones.Parser
 
 		private static TokenListParser<DiceExpressionToken, IExpression> AddSubtract { get; } =
 			Parse.Chain(Add.Or(Subtract), MultiplyDivide, MakeOperation);
+		internal static TokenListParser<DiceExpressionToken, string> ExpressionComment { get; } =
+			Token.EqualTo(DiceExpressionToken.Comment)
+				.AtEnd().Try()
+				.Apply(DiceExpressionTextParsers.Comment);
 
 		/// <summary>
 		/// The entry point to the DiceExpressionParser.
 		/// </summary>
 		internal static TokenListParser<DiceExpressionToken, DiceExpression> Expression { get; } =
-			from expr in AddSubtract.AtEnd()
-			select new DiceExpression(expr);
+			from expression in AddSubtract.Then(expr =>
+				from comment in ExpressionComment.AtEnd()
+				select new DiceExpression(expr) { Comment = comment }
+			)
+			.Or(
+				AddSubtract.AtEnd()
+				.Select(e => new DiceExpression(e))
+			)
+			select expression;
 	}
 }

@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace cmdwtf.NumberStones.Tests
@@ -86,6 +88,13 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("1+2   [Guidance is just powerful butt touches]", "1 + 2[Guidance is just powerful butt touches]")] // spaces inside shouldn't matter
 		public void ConstantsCanHaveLabels(string input, string expected) => ParseAndCheckExpected(input, expected);
 
+		[DataTestMethod]
+		[DataRow("1d4+4 # Healing Potion", "Healing Potion")]
+		[DataRow("1d4+4#Healing Potion", "Healing Potion")] // spaces shouldn't matter
+		[DataRow("2d20kh1 + 3[STR] + 2[PROF] # Attack with advantage", "Attack with advantage")]
+		//[DataRow("#comment only", "comment only")] // this is unsupported, and i don't think it should be?
+		public void DiceExpressionsCanHaveComments(string input, string expected) => ParseAndCheckExpected(input, expected, e => e.Comment);
+
 		[TestMethod]
 		public void DiceParseHandlesNoOptions() => ParseAndCheckExpected("1d20", "1d20");
 
@@ -163,12 +172,12 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("8d20kh2dl1cs>=5cf<2t3r4=2[neat]!p>19", "8d20kh2dl1cs>=5cf<2t3r4=2[neat]!p>19")]
 		public void DiceParseHandlesComplexOptionStrings(string input, string expected) => ParseAndCheckExpected(input, expected);
 
-		private static void ParseAndCheckExpected(string input, string expected)
+		private static void ParseAndCheckExpected(string input, string expected, Func<DiceExpression, string>? getCompareOverride = null)
 		{
 			DiceExpression? expression = Dice.Parse(input);
 			Assert.IsNotNull(expression);
 			Assert.IsFalse(expression.IsEmpty);
-			string parsedExpression = expression.ToString();
+			string parsedExpression = getCompareOverride?.Invoke(expression) ?? expression.ToString();
 			DiceResult result = expression.Roll();
 			Tools.Write(input, expression, result, expected);
 			Assert.AreEqual(expected, parsedExpression);

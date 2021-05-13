@@ -13,7 +13,21 @@ namespace cmdwtf.NumberStones
 	{
 		private IExpression _expression = EmptyExpression.Instance;
 
+		/// <summary>
+		/// A value indicating if this dice expression contains any evaluatable expressions.
+		/// </summary>
 		public bool IsEmpty { get; private set; } = true;
+
+		/// <summary>
+		/// An alias for the opposite of <see cref="IsEmpty"/>, is true when
+		/// this dice expression has expressions that can be evaluated.
+		/// </summary>
+		public bool CanEvaulate => !IsEmpty;
+
+		/// <summary>
+		/// A user-specified string associated with this expression.
+		/// </summary>
+		public string Comment { get; set; } = string.Empty;
 
 		/// <summary>
 		/// Construct a new DiceExpression class with an empty expression.
