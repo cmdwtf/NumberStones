@@ -10,14 +10,14 @@ namespace cmdwtf.NumberStones.Parser
 	internal static class DiceTermTextParsers
 	{
 		public const string CoinTypeSide = "C";
-		public const string FateTypeSide = "F";
+		public const string FudgeTypeSide = "F";
 		public const string PlanechaseTypeSide = "P";
 
 		private static TextParser<DiceTypes.DiceType> DiceKind { get; } =
 			from type in Parse.OneOf(
 					Span.EqualToIgnoreCase(CoinTypeSide).Value(DiceTypes.DiceType.Coin),
-					Span.EqualToIgnoreCase(FateTypeSide).Value(DiceTypes.DiceType.Fate),
-					Span.EqualToIgnoreCase(PlanechaseTypeSide).Value(DiceTypes.DiceType.Planechase)
+					Span.EqualToIgnoreCase(FudgeTypeSide).Value(DiceTypes.DiceType.Fudge),
+					Span.EqualToIgnoreCase(PlanechaseTypeSide).Value(DiceTypes.DiceType.Planar)
 				).OptionalOrDefault(DiceTypes.DiceType.Numerical)
 			select type;
 

@@ -42,8 +42,8 @@ namespace cmdwtf.NumberStones
 		private decimal ModeSides => Kind switch
 		{
 			DiceType.Coin => 2,
-			DiceType.Fate => 6,
-			DiceType.Planechase => 6,
+			DiceType.Fudge => 6,
+			DiceType.Planar => 6,
 			_ => SidesReal,
 		};
 
@@ -54,8 +54,8 @@ namespace cmdwtf.NumberStones
 		public string SidesString => Kind switch
 		{
 			DiceType.Coin => DiceTermTextParsers.CoinTypeSide,
-			DiceType.Fate => DiceTermTextParsers.FateTypeSide,
-			DiceType.Planechase => DiceTermTextParsers.PlanechaseTypeSide,
+			DiceType.Fudge => DiceTermTextParsers.FudgeTypeSide,
+			DiceType.Planar => DiceTermTextParsers.PlanechaseTypeSide,
 			_ => SidesReal.ToString(),
 		};
 
