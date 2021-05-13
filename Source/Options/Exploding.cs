@@ -8,14 +8,28 @@ using cmdwtf.NumberStones.Rollers;
 
 namespace cmdwtf.NumberStones.Options
 {
+	/// <summary>
+	/// An option representing exploding dice that can continue rolling aditional dice, by default on max rolls
+	/// </summary>
 	public record Exploding(decimal Value, ExplodingDiceMode Type, ComparisonDiceMode Mode) : ComparisonOptionBase(Value, Mode)
 	{
+		/// <summary>
+		/// The dice expression symbol for this option
+		/// </summary>
 		public const char Symbol = '!';
+		/// <summary>
+		/// The dice expression symbol for the compound option
+		/// </summary>
 		public const char SymbolCompound = '!';
+		/// <summary>
+		/// The dice expression symbol for the penetrating option
+		/// </summary>
 		public const char SymbolPenetrating = 'p';
 
+		/// <inheritdoc cref="IDiceOption.Name"/>
 		public override string Name => $"{nameof(Exploding)} ({Type}) {Mode}";
 
+		/// <inheritdoc cref="IDiceOption.Apply(IEnumerable{DiceExpressionResult}, IDieRoller)"/>
 		public override IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
 		{
 			decimal target = Value;
@@ -78,6 +92,8 @@ namespace cmdwtf.NumberStones.Options
 			}
 		}
 
+
+		/// <inheritdoc cref="IDiceOption.BuildOptionString(StringBuilder)"/>
 		public override void BuildOptionString(StringBuilder builder)
 		{
 			string explodeString = Type switch

@@ -30,7 +30,7 @@ namespace cmdwtf.NumberStones.Random
 		/// This constructor does not take a clone function so Choose() cannot be called, only Draw()
 		/// </summary>
 		public WeightedPool()
-		   : this(Instances.DefaultRandom)
+		   : this(Instances.DotNet)
 		{
 		}
 

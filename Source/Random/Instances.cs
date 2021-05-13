@@ -2,14 +2,19 @@
 namespace cmdwtf.NumberStones.Random
 {
 	/// <summary>
-	/// The Singleton class is a public static class that holds the DefaultRandom generator.
+	/// A static class that collects instances of RNG implementations.
 	/// </summary>
 	public static class Instances
 	{
 		/// <summary>
-		/// The DefaultRandom generator is DotNetRandom from System.Random
+		/// A random number generator based on the <see cref="System.Random"/> RNG.
 		/// </summary>
 		/// CA2104 is thrown incorrectly on this line. Singleton.DefaultRandom is immutable.
-		public static readonly IRandom DefaultRandom = new DotNetRandom();
+		public static IRandom DotNet { get; } = new DotNetRandom();
+
+		/// <summary>
+		/// A random number generator based on the Mersenne Twister 19937 PRNG algorithm.
+		/// </summary>
+		public static IRandom Mt19937 { get; } = new MersenneTwister19937();
 	}
 }

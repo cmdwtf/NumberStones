@@ -8,14 +8,28 @@ using cmdwtf.NumberStones.Rollers;
 
 namespace cmdwtf.NumberStones.Options
 {
+	/// <summary>
+	/// An option representing dropping values from a multi-dice roll
+	/// </summary>
 	public record Drop(decimal Amount, HighLowMode Mode = HighLowMode.Low) : DecimalDiceOption(Amount)
 	{
+		/// <summary>
+		/// The dice expression symbol for this option
+		/// </summary>
 		public const char Symbol = 'd';
+		/// <summary>
+		/// The dice expression symbol for acting on high rolls
+		/// </summary>
 		public const char SymbolHigh = 'h';
+		/// <summary>
+		/// The dice expression symbol for acting on low rolls
+		/// </summary>
 		public const char SymbolLow = 'l';
 
+		/// <inheritdoc cref="IDiceOption.Name"/>
 		public override string Name => nameof(Drop);
 
+		/// <inheritdoc cref="IDiceOption.Apply(IEnumerable{DiceExpressionResult}, IDieRoller)"/>
 		public override IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
 		{
 			if (Value == 0)
@@ -34,6 +48,7 @@ namespace cmdwtf.NumberStones.Options
 			};
 		}
 
+		/// <inheritdoc cref="IDiceOption.BuildOptionString(StringBuilder)"/>
 		public override void BuildOptionString(StringBuilder builder)
 		{
 			if (Amount == 0)
