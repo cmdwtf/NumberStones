@@ -41,7 +41,7 @@ namespace cmdwtf.NumberStones.Options
 
 			return input.SelectMany(r =>
 			{
-				if (ModeComparison(target, r.Value))
+				if (ModeComparison(r.Value, target))
 				{
 					return ExplodeRoll(target, r, roller);
 				}

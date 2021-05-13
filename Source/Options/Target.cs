@@ -25,7 +25,7 @@ namespace cmdwtf.NumberStones.Options
 
 			return input.Select(r =>
 			{
-				if (ModeComparison(Value, r.Value))
+				if (ModeComparison(r.Value, Value))
 				{
 					return r with
 					{
