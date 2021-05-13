@@ -60,7 +60,7 @@ namespace cmdwtf.NumberStones.Options
 			{
 				yield return new()
 				{
-					Value = decimal.MaxValue,
+					Value = long.MaxValue,
 					Sides = r.Sides,
 					TermType = $"!d{r.Sides}"
 				};
