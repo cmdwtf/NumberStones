@@ -52,7 +52,21 @@ namespace cmdwtf.NumberStones.Options
 
 		private IEnumerable<DiceExpressionResult> ExplodeRoll(decimal target, DiceExpressionResult r, IDieRoller roller)
 		{
-			List<DiceExpressionResult> explodedResults = new();
+			// check to see if we will be exploding forever.
+			// if the roller's range is 0, it will be returning
+			// the same value that got us exploding in the first place,
+			// and thus we can safely return with a fixed high value.
+			if (roller.Range == 0)
+			{
+				yield return new()
+				{
+					Value = decimal.MaxValue,
+					Sides = r.Sides,
+					TermType = $"!d{r.Sides}"
+				};
+
+				yield break;
+			}
 
 			int explodedRoll;
 			int explodedTotal = 0;
