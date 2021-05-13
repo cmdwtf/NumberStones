@@ -34,7 +34,7 @@ namespace cmdwtf.NumberStones.Options
 				{
 					return r with
 					{
-						Value = Dice.Roll(r.TermType, roller)
+						Value = roller.RollDie((int)r.Sides),
 					};
 				}
 
