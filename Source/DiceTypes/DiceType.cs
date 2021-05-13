@@ -2,7 +2,7 @@
 {
 	public enum DiceType
 	{
-		Polyhedron = 0,
+		Numerical = 0,
 		Coin,
 		Fate,
 		Fudge = Fate,

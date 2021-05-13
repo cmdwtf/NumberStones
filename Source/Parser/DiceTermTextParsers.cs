@@ -18,7 +18,7 @@ namespace cmdwtf.NumberStones.Parser
 					Span.EqualToIgnoreCase(CoinTypeSide).Value(DiceTypes.DiceType.Coin),
 					Span.EqualToIgnoreCase(FateTypeSide).Value(DiceTypes.DiceType.Fate),
 					Span.EqualToIgnoreCase(PlanechaseTypeSide).Value(DiceTypes.DiceType.Planechase)
-				).OptionalOrDefault(DiceTypes.DiceType.Polyhedron)
+				).OptionalOrDefault(DiceTypes.DiceType.Numerical)
 			select type;
 
 		private static TextParser<decimal> DiceSides { get; } =
@@ -153,8 +153,8 @@ namespace cmdwtf.NumberStones.Parser
 			from seperator in DiceExpressionTextParsers.DiceSeperatorCharacter
 			from sides in DiceSides.OptionalOrDefault(0m)
 			from kind in DiceKind.Try()
-				.Where(k => sides == 0m && k != DiceTypes.DiceType.Polyhedron)
-				.OptionalOrDefault(DiceTypes.DiceType.Polyhedron)
+				.Where(k => sides == 0m && k != DiceTypes.DiceType.Numerical)
+				.OptionalOrDefault(DiceTypes.DiceType.Numerical)
 			from options in DiceOptions
 			select new DiceSettings(sides, multiplicity, kind)
 			{

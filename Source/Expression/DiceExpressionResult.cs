@@ -22,7 +22,7 @@ namespace cmdwtf.NumberStones.Expression
 		/// <summary>
 		/// The type of dice that was rolled to get this result.
 		/// </summary>
-		public virtual DiceType Type { get; init; } = DiceType.Polyhedron;
+		public virtual DiceType Type { get; init; } = DiceType.Numerical;
 
 		/// <summary>
 		/// The number of sides that this dice term had.

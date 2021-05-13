@@ -14,7 +14,7 @@ namespace cmdwtf.NumberStones
 	/// <summary>
 	/// A record representing the options and settings for a Die or Dice.
 	/// </summary>
-	public record DiceSettings(decimal SidesReal, decimal MultiplicityReal = 1m, DiceType Kind = DiceType.Polyhedron)
+	public record DiceSettings(decimal SidesReal, decimal MultiplicityReal = 1m, DiceType Kind = DiceType.Numerical)
 	{
 		/// <summary>
 		/// A string representing no additional dice options.
