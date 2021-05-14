@@ -49,8 +49,8 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("1d20+5 # Grog attacks", "1d20 + 5 # Grog attacks")] // Roll dice with a comment.
 		[DataRow("2d6>=5", "2d6>=5")] // Roll two hexahedrons and take only the ones that turned greater or equal to five (aka difficulty check). Prints the number of successes.
 		[DataRow("4d6=5", "4d6=5")] // So can this guy roll five?
-		[DataRow("3d10>=6f1")] // oWoD roll: rolling *one* is a failure, rolling more failures than successes is a *botch*.
-		[DataRow("1d10>=8f1f2")] // Rolling *one* or *two* is a failure.
+		[DataRow("3d10>=6f1", "3d10>=6f1")] // oWoD roll: rolling *one* is a failure, rolling more failures than successes is a *botch*.
+		[DataRow("1d10>=8f1f2", "1d10>=8f1f2")] // Rolling *one* or *two* is a failure.
 		[DataRow("4dF", "4dF")] // [Fudge/Fate dice](http://rpg.stackexchange.com/questions/1765/what-game-circumstance-uses-fudge-dice).
 		[DataRow("3d6!", "3d6!")] // Exploding dice.
 		[DataRow("1d10!>9", "1d10!>9")] // Explode nine and ten.

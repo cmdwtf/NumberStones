@@ -105,6 +105,11 @@ namespace cmdwtf.NumberStones.Parser
 			from val in Numerics.DecimalDecimal.OptionalOrDefault(0m)
 			select new Exploding(val, type, mode) as IDiceOption;
 
+		private static TextParser<IDiceOption> FailureOption { get; } =
+			from key in Character.EqualToIgnoreCase(Failure.Symbol)
+			from val in Numerics.DecimalDecimal
+			select new Failure(val) as IDiceOption;
+
 		private static TextParser<IDiceOption> KeepOption { get; } =
 			from key in Character.EqualToIgnoreCase(Keep.Symbol)
 			from mode in HighLowType.Try()
@@ -138,6 +143,7 @@ namespace cmdwtf.NumberStones.Parser
 				CriticalOption,
 				DropOption,
 				ExplodingOption,
+				FailureOption,
 				KeepOption,
 				LabelOption,
 				RerollOption,

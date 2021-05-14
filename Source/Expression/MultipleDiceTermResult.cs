@@ -38,8 +38,9 @@ namespace cmdwtf.NumberStones.Expression
 
 			Value = _subResults.Sum(r => r.Value);
 
-			int successes = _subResults.Count(r => r.Success == DiceBoolean.True);
-			int failures = _subResults.Count(r => r.Success == DiceBoolean.False);
+			// set botches based on failure and success count
+			int successes = _subResults.Count(r => r.Success);
+			int failures = _subResults.Count(r => r.Failure);
 
 			if (successes > 0 || failures > 0)
 			{

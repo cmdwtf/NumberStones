@@ -15,22 +15,23 @@ namespace cmdwtf.NumberStones.Parser
 		// #creep: group - https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-GroupedRolls
 
 		public static string DiceOptionString { get; } =
-			$"{Options.Keep.Symbol}"
-			+ $"{Options.Drop.Symbol}"
-			+ $"{Options.Keep.SymbolHigh}"
-			+ $"{Options.Keep.SymbolLow}"
+			$"{Options.ComparisonOptionBase.SymbolEqual}"
+			+ $"{Options.ComparisonOptionBase.SymbolGreater}"
+			+ $"{Options.ComparisonOptionBase.SymbolLess}"
+			+ $"{Options.ComparisonOptionBase.SymbolNot}"
 			+ $"{Options.Critical.Symbol}"
 			+ $"{Options.Critical.SymbolSuccess}"
 			+ $"{Options.Critical.SymbolFailure}"
-			+ $"{Options.Reroll.Symbol}"
-			+ $"{Options.Twice.Symbol}"
+			+ $"{Options.Drop.Symbol}"
 			+ $"{Options.Exploding.Symbol}"
 			+ $"{Options.Exploding.SymbolCompound}"
 			+ $"{Options.Exploding.SymbolPenetrating}"
-			+ $"{Options.ComparisonOptionBase.SymbolEqual}"
-			+ $"{Options.ComparisonOptionBase.SymbolGreater}"
-			+ $"{Options.ComparisonOptionBase.SymbolLess}"
-			+ $"{Options.ComparisonOptionBase.SymbolNot}";
+			+ $"{Options.Failure.Symbol}"
+			+ $"{Options.Keep.Symbol}"
+			+ $"{Options.Keep.SymbolHigh}"
+			+ $"{Options.Keep.SymbolLow}"
+			+ $"{Options.Reroll.Symbol}"
+			+ $"{Options.Twice.Symbol}";
 
 		public static char[] DiceOptionChars { get; } =
 			(DiceOptionString + DiceOptionString.ToUpper())

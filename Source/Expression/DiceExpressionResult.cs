@@ -9,9 +9,22 @@ namespace cmdwtf.NumberStones.Expression
 	{
 		/// <summary>
 		/// A boolean representing if the value for the result is considered a success.
+		/// Success being <see cref="DiceBoolean.False"/> is NOT the same as the
+		/// <see cref="Failure"/> property being <see cref="DiceBoolean.True"/>.
+		/// Success is modified by <see cref="Options.Target"/> (e.g.: "1d20>=10", and <see cref="Failure"/>
+		/// is modified by <see cref="Options.Failure"/> (e.g.: "1d6f1f2").
 		/// Unless modified by an option, the value will be <see cref="DiceBoolean.Unset"/>
 		/// </summary>
 		public DiceBoolean Success { get; init; } = DiceBoolean.Unset;
+		/// <summary>
+		/// A boolean representing if the value for the result is considered a failure.
+		/// Failure being <see cref="DiceBoolean.False"/> is NOT the same as the
+		/// <see cref="Success"/> property being <see cref="DiceBoolean.True"/>.
+		/// Success is modified by <see cref="Options.Target"/> (e.g.: "1d20>=10", and <see cref="Failure"/>
+		/// is modified by <see cref="Options.Failure"/> (e.g.: "1d20>=10").
+		/// Unless modified by an option, the value will be <see cref="DiceBoolean.Unset"/>
+		/// </summary>
+		public DiceBoolean Failure { get; init; } = DiceBoolean.Unset;
 
 		/// <summary>
 		/// A boolean representing if the value for the result is considered a critical success.
