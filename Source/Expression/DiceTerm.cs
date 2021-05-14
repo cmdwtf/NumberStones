@@ -130,7 +130,7 @@ namespace cmdwtf.NumberStones.Expression
 				results = option.Apply(results, context.Roller);
 			}
 
-			return new MultipleTermResult(results)
+			return new MultipleDiceTermResult(results)
 			{
 				TermType = $"{Multiplicity}d{Sides}"
 			};

@@ -41,6 +41,11 @@ namespace cmdwtf.NumberStones.Expression
 			Value = value;
 		}
 
+		public static implicit operator bool(DiceBoolean value)
+		{
+			return value.Value == _trueValue;
+		}
+
 		public static implicit operator DiceBoolean(bool value)
 		{
 			return value
