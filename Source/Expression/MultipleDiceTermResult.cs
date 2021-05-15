@@ -28,6 +28,16 @@ namespace cmdwtf.NumberStones.Expression
 		public DiceBoolean Botch1E { get; private init; } = DiceBoolean.Unset;
 
 		/// <summary>
+		/// The numerical result of multiple fudge dice being rolled together.
+		/// </summary>
+		public int FudgeResult { get; private init; }
+
+		/// <summary>
+		/// The numerical result of multiple fate dice being rolled together.
+		/// </summary>
+		public int FateResult => FudgeResult;
+
+		/// <summary>
 		/// Creates a new multiple term result
 		/// </summary>
 		/// <param name="subResults">A list of results to store as the sub results</param>
@@ -46,6 +56,17 @@ namespace cmdwtf.NumberStones.Expression
 			{
 				Botch = (successes == 0 && failures > 1);
 				Botch1E = (successes < failures);
+			}
+
+			// total up fudge values
+			IEnumerable<FudgeDiceExpressionResult> fudgeResults = _subResults.OfType<FudgeDiceExpressionResult>();
+
+			if (fudgeResults.Any())
+			{
+				int fudgePlusses = fudgeResults.Count(fr => fr.Result == DiceTypes.FudgeResult.Plus);
+				int fudgeMinuses = fudgeResults.Count(fr => fr.Result == DiceTypes.FudgeResult.Minus);
+
+				FudgeResult = fudgePlusses - fudgeMinuses;
 			}
 		}
 

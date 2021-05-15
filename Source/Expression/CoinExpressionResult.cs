@@ -11,6 +11,6 @@ namespace cmdwtf.NumberStones.Expression
 
 		// Overriden because record ToString() gets stomped.
 		/// <inheritdoc cref="DiceExpressionResult.ToString"/>
-		public override string ToString() => base.ToString();
+		public override string ToString() => Result.ToString();
 	}
 }

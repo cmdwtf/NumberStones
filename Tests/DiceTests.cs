@@ -16,15 +16,56 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("1 + 1d6", 2, 7)]
 		[DataRow("1d6 * 3", 3, 18)]
 		public void SimpleDiceRollsInRange(string input, int low, int high)
+			=> DiceRangeRoll(input, low, high);
+
+		[DataTestMethod]
+		[DataRow("dC", 0, 1)]
+		[DataRow("1dC", 0, 1)]
+		[DataRow("4dC", 0, 4)]
+		[DataRow("8dC", 0, 8)]
+		[DataRow("8dC", 0, 8)]
+		[DataRow("8dC", 0, 8)]
+		[DataRow("8dC", 0, 8)]
+		public void CoinDiceRollInRange(string input, int low, int high)
+			=> DiceRangeRoll(input, low, high);
+
+		[DataTestMethod]
+		[DataRow("dF", -1, 1)]
+		[DataRow("1dF", -1, 1)]
+		[DataRow("4dF", -4, 4)]
+		[DataRow("8dF", -8, 8)]
+		[DataRow("8dF", -8, 8)]
+		[DataRow("8dF", -8, 8)]
+		[DataRow("8dF", -8, 8)]
+		public void FudgeDiceRollInRange(string input, int low, int high)
+			=> DiceRangeRoll(input, low, high);
+
+		[DataTestMethod]
+		[DataRow("dP", 0, 0)]
+		[DataRow("1dP", 0, 0)]
+		[DataRow("4dP", 0, 0)]
+		[DataRow("8dP", 0, 0)]
+		[DataRow("8dP", 0, 0)]
+		[DataRow("8dP", 0, 0)]
+		[DataRow("8dP", 0, 0)]
+		public void PlanarDiceRollInRange(string input, int low, int high)
+			=> DiceRangeRoll(input, low, high);
+
+		private static void DiceRangeRoll(string input, int low, int high)
 		{
 			DiceExpression? expression = Dice.Parse(input);
 			Assert.IsNotNull(expression);
 			Assert.IsFalse(expression.IsEmpty);
 			DiceResult result = expression.Roll();
-			Tools.Write(input, expression, result, $"{low}<={result.Value}{high}");
-			Assert.IsTrue(result.Value >= low && result.Value <= high);
+			DiceResult minResult = expression.Roll(Rollers.Instances.MinRoller);
+			DiceResult maxResult = expression.Roll(Rollers.Instances.MaxRoller);
+			Debug.WriteLine(minResult);
+			Debug.WriteLine(maxResult);
+			Tools.Write(input, expression, result, $"{low}<={result}<={high}");
+			Assert.IsTrue(low == minResult.Value);
+			Assert.IsTrue(high == maxResult.Value);
+			Assert.IsTrue(result.Value >= minResult.Value && result.Value <= maxResult.Value);
 		}
-
 
 		[DataTestMethod]
 		[DataRow("d", 0)]
@@ -61,8 +102,6 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("2d20k1 + 2", "2d20k1+2")] // Roll twice and keep the highest roll, with a modifier (D&D 5e advantage).
 		[DataRow("2d20kl1", "2d20kl1")] // Roll twice and keep the lowest roll (D&D 5e disadvantage).
 		[DataRow("4d6k3", "4d6k3")] // Roll four hexahedrons and keep the highest three (D&D 5e ability roll).
-									//[DataRow("/r ova(5)")] // OVA. 6, 6, 1, 1, 1 = 12.
-									//[DataRow("//roll-dice3-sides999")] // AOL syntax. Dice noir.
 		[DataRow("(2+2)^2", "(2+2)^2")] // Do math.
 		[DataRow("4d6^2", "4d6^2")] // Do math with dice.
 		public void SidekickBotSuite(string input, string expectedExpression)

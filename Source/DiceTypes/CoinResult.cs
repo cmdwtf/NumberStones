@@ -6,12 +6,13 @@
 	public enum CoinResult
 	{
 		/// <summary>
-		/// The top side of the coin
-		/// </summary>
-		Heads,
-		/// <summary>
 		/// The bottom side of the coin, and Sonic's sidekick
 		/// </summary>
-		Tails
+		/// <remarks>Never fails</remarks>
+		Tails = 0,
+		/// <summary>
+		/// The top side of the coin
+		/// </summary>
+		Heads = 1
 	}
 }

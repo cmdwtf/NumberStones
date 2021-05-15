@@ -2,7 +2,7 @@
 
 namespace cmdwtf.NumberStones.Expression
 {
-	public record PlanechaseExpressionResult(PlanarResult Result) : DiceExpressionResult
+	public record PlanarDiceExpressionResult(PlanarResult Result) : DiceExpressionResult
 	{
 		/// <summary>
 		/// This result represents a Planechase dice roll.
@@ -11,6 +11,6 @@ namespace cmdwtf.NumberStones.Expression
 
 		// Overriden because record ToString() gets stomped.
 		/// <inheritdoc cref="DiceExpressionResult.ToString"/>
-		public override string ToString() => base.ToString();
+		public override string ToString() => Result.ToString();
 	}
 }

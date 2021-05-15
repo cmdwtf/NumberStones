@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using cmdwtf.NumberStones.DiceTypes;
 using cmdwtf.NumberStones.Exceptions;
 using cmdwtf.NumberStones.Options;
 
@@ -35,6 +36,11 @@ namespace cmdwtf.NumberStones.Expression
 		/// Sum all but this many dice with the highest values out of those rolled
 		/// </summary>
 		public int Drop => Settings.Drop;
+
+		/// <summary>
+		/// The type of dice used in this term.
+		/// </summary>
+		public DiceType Kind => Settings.Kind;
 
 		/// <summary>
 		/// Construct a new instance of the DiceTerm class using the specified values
@@ -74,7 +80,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			Settings = new(sides, multiplicity)
 			{
-				OptionString = drop > 0 ? $"d{drop}" : ""
+				OptionString = drop > 0 ? $"{Constants.DiceSeperator}{drop}" : ""
 			};
 		}
 
@@ -94,36 +100,22 @@ namespace cmdwtf.NumberStones.Expression
 		/// <returns>An IEnumerable of TermResult which will have one item per die rolled</returns>
 		public override ExpressionResult Evaluate(EvaluationContext context)
 		{
+			// a 0 multiplicity die is a bizarre thing.
+			// maybe we should be throwing exceptions, but for now
+			// we will just give them back a 0.
 			if (Multiplicity == 0)
 			{
 				return new DiceExpressionResult()
 				{
 					Value = 0,
 					Sides = Sides,
-					TermType = $"0d{Sides}"
-				};
-			}
-			else if (Multiplicity == 1)
-			{
-				return new DiceExpressionResult()
-				{
-					Value = context.Roller.RollDie(Sides),
-					Sides = Sides,
-					TermType = $"d{Sides}"
+					TermType = $"0{Constants.DiceSeperator}{Sides}"
 				};
 			}
 
 			IEnumerable<DiceExpressionResult> results =
 				from i in Enumerable.Range(0, Multiplicity)
-				let roll = context.Roller.RollDie(Sides)
-				select new DiceExpressionResult()
-				{
-					Value = roll,
-					Sides = Sides,
-					TermType = "d" + Sides,
-					CriticalSuccess = roll == Sides,
-					CriticalFailure = roll == 1
-				};
+				select DiceTypeResolver.Roll(Kind, context.Roller, Sides);
 
 			foreach (IDiceOption option in Settings.Options)
 			{
@@ -132,7 +124,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			return new MultipleDiceTermResult(results)
 			{
-				TermType = $"{Multiplicity}d{Sides}"
+				TermType = $"{Multiplicity}{Constants.DiceSeperator}{Sides}"
 			};
 		}
 
