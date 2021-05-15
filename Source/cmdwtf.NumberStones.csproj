@@ -1,14 +1,47 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <RootNamespace>cmdwtf.NumberStones</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <LangVersion>preview</LangVersion>
-    <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
+
+    <Description>A library that can be used to parse dice expressions and roll them as if you were sitting at a tabletop.</Description>
+    <PackageTags>games;d&amp;d;dnd;dice;die;random;rng;tabletop;rpg;number;stones;numberstones</PackageTags>
+    <Product>cmd.wtf NumberStones</Product>
+
+    <Authors>Chris Marc Dailey (nitz)</Authors>
+    <PackageId>cmdwtf.NumberStones</PackageId>
+    <Company>cmd.wtf</Company>
+    <Copyright>© 2021 Chris Marc Dailey</Copyright>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageIcon>PackageIcon.png</PackageIcon>
+    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://cmd.wtf/projects/numberstones</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/cmdwtf/NumberStones</RepositoryUrl>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Title>$(Product)</Title>
+
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Superpower" Version="3.0.0-dev-00210" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(ProjectDir)..\.meta\$(PackageIcon)" Visible="false">
+      <PackagePath>.\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <Import Project="$(ProjectDir)..\.meta\VersionInfo.props" />
 
 </Project>
