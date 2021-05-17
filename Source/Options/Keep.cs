@@ -56,5 +56,9 @@ namespace cmdwtf.NumberStones.Options
 			char hl = Mode == HighLowMode.High ? SymbolHigh : SymbolLow;
 			builder.Append($"{Symbol}{hl}{Amount}");
 		}
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }

@@ -59,5 +59,9 @@ namespace cmdwtf.NumberStones.Options
 			ComparisonDiceMode.Not => ((a, b) => a != b),
 			_ => throw new InvalidOptionException($"Unhandled {nameof(ComparisonDiceMode)}: {Mode}"),
 		};
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }

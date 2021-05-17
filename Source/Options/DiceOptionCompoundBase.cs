@@ -33,5 +33,9 @@ namespace cmdwtf.NumberStones.Options
 
 		/// <inheritdoc cref="IDiceOption.BuildOptionString(StringBuilder)"/>
 		public abstract void BuildOptionString(StringBuilder builder);
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }

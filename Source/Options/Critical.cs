@@ -66,5 +66,9 @@ namespace cmdwtf.NumberStones.Options
 
 			builder.Append($"{Symbol}{critModeChar}{ModeOptionString}{Value}");
 		}
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }

@@ -20,5 +20,9 @@ namespace cmdwtf.NumberStones.Options
 		/// Get an instance of the <see cref="NopOption"/>
 		/// </summary>
 		public static NopOption Instance { get; } = new();
+
+		// Overriden because record ToString() gets stomped.
+		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
+		public override string ToString() => base.ToString();
 	}
 }
