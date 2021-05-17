@@ -36,6 +36,6 @@ namespace cmdwtf.NumberStones.Options
 
 		// Overriden because record ToString() gets stomped.
 		/// <inheritdoc cref="DiceOptionBase{T}.ToString"/>
-		public override string ToString() => base.ToString();
+		public override string ToString() => string.Join(" ", SubOptions.Select(so => so.ToString()));
 	}
 }
