@@ -39,6 +39,11 @@ namespace cmdwtf.NumberStones.Expression
 		public DiceBoolean CriticalFailure { get; init; } = DiceBoolean.Unset;
 
 		/// <summary>
+		/// A record representing if the value from this dice was dropped.
+		/// </summary>
+		public DiceDropResult Dropped { get; init; } = DiceDropResult.NotDropped;
+
+		/// <summary>
 		/// The type of dice that was rolled to get this result.
 		/// </summary>
 		public virtual DiceType Type { get; init; } = DiceType.Numerical;
@@ -48,8 +53,10 @@ namespace cmdwtf.NumberStones.Expression
 		/// </summary>
 		public decimal Sides { get; init; } = 0;
 
-		// Overriden because record ToString() gets stomped.
 		/// <inheritdoc cref="DiceExpressionResult.ToString"/>
-		public override string ToString() => base.ToString();
+		public override string ToString() =>
+			Dropped == false
+			? base.ToString()
+			: $"~~{Dropped.OriginalValue} ({TermType})~~";
 	}
 }

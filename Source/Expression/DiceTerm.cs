@@ -113,13 +113,32 @@ namespace cmdwtf.NumberStones.Expression
 				};
 			}
 
-			IEnumerable<DiceExpressionResult> results =
-				from i in Enumerable.Range(0, Multiplicity)
-				select DiceTypeResolver.Roll(Kind, context.Roller, Sides);
+			// roll the dice now, and force evaluation now
+			// by using ToList, or the rolls will keep flowing.
+			List<DiceExpressionResult> results =
+				(from i in Enumerable.Range(0, Multiplicity)
+				 select DiceTypeResolver.Roll(Kind, context.Roller, Sides))
+				.ToList();
 
+			// apply each option in sequence,
+			// realizing the results immediately so that
+			// each option later can safely operate on the results.
+			// todo: investigate performance of this
 			foreach (IDiceOption option in Settings.Options)
 			{
-				results = option.Apply(results, context.Roller);
+				results = option.Apply(results, context.Roller).ToList();
+			}
+
+			// make sure we have results.
+			if (results.Count == 0)
+			{
+				throw new Exceptions.ImpossibleDieException("There are no results for this die roll.");
+			}
+
+			// if we only have one result, no need to wrap it up in a multi-term.
+			if (results.Count == 1)
+			{
+				return results[0];
 			}
 
 			return new MultipleDiceTermResult(results)

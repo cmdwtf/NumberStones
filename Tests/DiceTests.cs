@@ -1,5 +1,9 @@
 ﻿
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+
+using cmdwtf.NumberStones.Expression;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,6 +21,65 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("1d6 * 3", 3, 18)]
 		public void SimpleDiceRollsInRange(string input, int low, int high)
 			=> DiceRangeRoll(input, low, high);
+
+		[DataTestMethod]
+		[DataRow("4d6d1", 3, 18)]
+		[DataRow("4d6d1", 3, 18)]
+		[DataRow("4d6d1", 3, 18)]
+		[DataRow("4d6d1", 3, 18)]
+		[DataRow("4d6d1", 3, 18)]
+		[DataRow("4d6d1", 3, 18)]
+		[DataRow("4d6d2", 2, 12)]
+		[DataRow("4d6d3", 1, 6)]
+		public void DropReturnsExpcectedDice(string input, int low, int high)
+		{
+			// do a regular range check first.
+			DiceResult result = DiceRangeRoll(input, low, high);
+
+			// make sure that the dropped dice are all lower or equal to the kept ones
+			var mdtr = result.Results as MultipleDiceTermResult;
+			Assert.IsNotNull(mdtr);
+			Assert.IsTrue(mdtr.HasMultipleTermResults);
+			IEnumerable<DiceExpressionResult> dropped = mdtr.SubResults.Where(r => r.Dropped);
+			IEnumerable<DiceExpressionResult> kept = mdtr.SubResults.Where(r => !r.Dropped);
+
+			foreach (DiceExpressionResult d in dropped)
+			{
+				foreach (DiceExpressionResult k in kept)
+				{
+					Assert.IsTrue(d.Dropped.OriginalValue <= k.Value);
+				}
+			}
+		}
+		[DataTestMethod]
+		[DataRow("4d6k3", 3, 18)]
+		[DataRow("4d6k3", 3, 18)]
+		[DataRow("4d6k3", 3, 18)]
+		[DataRow("4d6k3", 3, 18)]
+		[DataRow("4d6k3", 3, 18)]
+		[DataRow("4d6k3", 3, 18)]
+		[DataRow("4d6k2", 2, 12)]
+		[DataRow("4d6k1", 1, 6)]
+		public void KeepReturnsExpcectedDice(string input, int low, int high)
+		{
+			// do a regular range check first.
+			DiceResult result = DiceRangeRoll(input, low, high);
+
+			// make sure that the dropped dice are all lower or equal to the kept ones
+			var mdtr = result.Results as MultipleDiceTermResult;
+			Assert.IsNotNull(mdtr);
+			Assert.IsTrue(mdtr.HasMultipleTermResults);
+			IEnumerable<DiceExpressionResult> dropped = mdtr.SubResults.Where(r => r.Dropped);
+			IEnumerable<DiceExpressionResult> kept = mdtr.SubResults.Where(r => !r.Dropped);
+
+			foreach (DiceExpressionResult d in dropped)
+			{
+				foreach (DiceExpressionResult k in kept)
+				{
+					Assert.IsTrue(d.Dropped.OriginalValue <= k.Value);
+				}
+			}
+		}
 
 		[DataTestMethod]
 		[DataRow("dC", 0, 1)]
@@ -51,7 +114,7 @@ namespace cmdwtf.NumberStones.Tests
 		public void PlanarDiceRollInRange(string input, int low, int high)
 			=> DiceRangeRoll(input, low, high);
 
-		private static void DiceRangeRoll(string input, int low, int high)
+		private static DiceResult DiceRangeRoll(string input, int low, int high)
 		{
 			DiceExpression? expression = Dice.Parse(input);
 			Assert.IsNotNull(expression);
@@ -65,6 +128,7 @@ namespace cmdwtf.NumberStones.Tests
 			Assert.IsTrue(low == minResult.Value);
 			Assert.IsTrue(high == maxResult.Value);
 			Assert.IsTrue(result.Value >= minResult.Value && result.Value <= maxResult.Value);
+			return result;
 		}
 
 		[DataTestMethod]

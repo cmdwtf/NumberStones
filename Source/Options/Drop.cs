@@ -32,20 +32,30 @@ namespace cmdwtf.NumberStones.Options
 		/// <inheritdoc cref="IDiceOption.Apply(IEnumerable{DiceExpressionResult}, IDieRoller)"/>
 		public override IEnumerable<DiceExpressionResult> Apply(IEnumerable<DiceExpressionResult> input, IDieRoller roller)
 		{
-			if (Value == 0)
+			int total = input.Count();
+			int amount = (int)Amount;
+			int remain = total - amount;
+
+			if (amount <= 0)
 			{
 				return input;
 			}
 
-			int count = input.Count();
-			int keep = count - (int)Value;
-
-			return Mode switch
+			IOrderedEnumerable<DiceExpressionResult> ordered = Mode switch
 			{
-				HighLowMode.Low => input.OrderBy(r => r.Value).Take(keep),
-				HighLowMode.High => input.OrderByDescending(r => r.Value).Take(keep),
+				HighLowMode.Low => input.OrderBy(r => r.Value),
+				HighLowMode.High => input.OrderByDescending(r => r.Value),
 				_ => throw new InvalidOptionException("Unhandled high low mode."),
 			};
+
+			return ordered.Skip(amount)
+				.Concat(
+					ordered.Take(amount).Select(r => r with
+					{
+						Value = 0,
+						Dropped = new DiceDropResult(r.Value, ToString())
+					})
+				);
 		}
 
 		/// <inheritdoc cref="IDiceOption.BuildOptionString(StringBuilder)"/>
