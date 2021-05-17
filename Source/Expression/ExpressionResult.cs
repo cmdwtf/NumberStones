@@ -22,6 +22,13 @@
 		public string TermType { get; init; } = string.Empty;
 
 		/// <summary>
+		/// A boolean representing if this expression result represents multiple terms.
+		/// By default, <see cref="ExpressionResult"/> only represents a single result,
+		/// but inhereting records may represent more than one.
+		/// </summary>
+		public virtual bool HasMultipleTermResults { get; protected init; } = false;
+
+		/// <summary>
 		/// Returns a string representing this expression result
 		/// </summary>
 		/// <returns>A string representing this expression result</returns>

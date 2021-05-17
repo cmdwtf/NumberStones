@@ -11,6 +11,11 @@ namespace cmdwtf.NumberStones.Expression
 		private readonly List<DiceExpressionResult> _subResults = new();
 
 		/// <summary>
+		/// <see cref="MultipleDiceTermResult"/> is designed to hold multiple results.
+		/// </summary>
+		public override bool HasMultipleTermResults { get; protected init; } = true;
+
+		/// <summary>
 		/// The individual term results that make up this multiple term result
 		/// </summary>
 		public IReadOnlyList<DiceExpressionResult> SubResults { get; private init; }
