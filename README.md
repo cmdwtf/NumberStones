@@ -8,7 +8,7 @@ Provide a simple, easy to use interface for dice rolling and simple mathematic e
 
 ## 💡 Inspiration
 
-NumberStones was born out of a desire to replace the late [Sidekick](https://github.com/ArtemGr/Sidekick) Discord bot. There's a lot of functionality missing and a long way to go, but this library will serve as the RNG backend for [ClickyClack](https://github.com/cmdwtf/ClickyClack) (Link may be dead as project isn't shared yet.)
+NumberStones was born out of a desire to replace the late [Sidekick](https://github.com/ArtemGr/Sidekick) Discord bot. There's a lot of functionality missing and a long way to go, but this library will serve as the RNG backend for [MathRox](https://github.com/cmdwtf/MathRox): the Discord front end for NumberStones.
 
 ## 📝 License
 
