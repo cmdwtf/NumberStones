@@ -62,5 +62,14 @@ namespace cmdwtf.NumberStones.Expression
 		{
 			return value.Value;
 		}
+
+		public override string ToString()
+			=> Value switch
+			{
+				_unsetValue => "unset",
+				_trueValue => "true",
+				_falseValue => "false",
+				_ => "error"
+			};
 	}
 }
