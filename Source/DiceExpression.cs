@@ -227,7 +227,7 @@ namespace cmdwtf.NumberStones
 
 			EvaluationContext context = new(roller);
 			ExpressionResult results = (this as IExpression).Evaluate(context);
-			return new DiceResult(results, roller);
+			return new DiceResult(this, results, roller);
 		}
 
 		/// <summary>

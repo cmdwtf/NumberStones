@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GOALS.md = GOALS.md
 		LICENSE = LICENSE
 		Local.runsettings = Local.runsettings
+		.meta\VersionInfo.props = .meta\VersionInfo.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cmdwtf.NumberStones.Tests", "Tests\cmdwtf.NumberStones.Tests.csproj", "{BA1DFA97-0D8E-4904-B5B5-1BD95508DEB9}"

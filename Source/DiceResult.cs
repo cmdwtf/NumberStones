@@ -7,7 +7,7 @@ namespace cmdwtf.NumberStones
 	/// <summary>
 	/// The DiceResult class represents the result of rolling a DiceExpression
 	/// </summary>
-	public record DiceResult(ExpressionResult Results, IDieRoller RollerUsed)
+	public record DiceResult(DiceExpression Expression, ExpressionResult Results, IDieRoller RollerUsed)
 	{
 		/// <summary>
 		/// The total result of the the roll
