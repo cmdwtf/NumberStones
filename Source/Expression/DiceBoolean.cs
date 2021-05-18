@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace cmdwtf.NumberStones.Expression
 {
@@ -79,5 +80,23 @@ namespace cmdwtf.NumberStones.Expression
 				_indeterminateValue => "indeterminate",
 				_ => "error"
 			};
+
+		public static DiceBoolean Collate(IEnumerable<DiceBoolean> targets)
+		{
+			if (targets.All(t => t == Unset))
+			{
+				return Unset;
+			}
+			else if (targets.All(t => t == True))
+			{
+				return True;
+			}
+			else if (targets.All(t => t == False))
+			{
+				return False;
+			}
+
+			return Indeterminate;
+		}
 	}
 }
