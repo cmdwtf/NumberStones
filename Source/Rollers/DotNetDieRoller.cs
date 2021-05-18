@@ -43,5 +43,8 @@ namespace cmdwtf.NumberStones.Rollers
 		/// The range of this roller
 		/// </summary>
 		public virtual long Range => int.MaxValue;
+
+		/// <inheritdoc cref="IDieRoller.Information"/>
+		public virtual string Information => $"{_random.GetType().Name} via {nameof(DotNetDieRoller)}";
 	}
 }

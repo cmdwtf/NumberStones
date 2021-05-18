@@ -13,8 +13,13 @@
 		/// <summary>
 		/// Rolls the die of specified sides.
 		/// </summary>
-		/// <param name="sides">The number of sides of the die to roll</param>
-		/// <returns>A number, perhaps random, based on the number of sides of the die</returns>
+		/// <param name="sides">The number of sides of the die to roll.</param>
+		/// <returns>A number, perhaps random, based on the number of sides of the die.</returns>
 		int RollDie(int sides);
+
+		/// <summary>
+		/// User-presentable information about the roller used. May be in basic markdown.
+		/// </summary>
+		string Information { get; }
 	}
 }

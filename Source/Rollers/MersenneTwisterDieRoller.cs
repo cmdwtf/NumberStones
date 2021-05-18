@@ -12,5 +12,8 @@
 		{
 
 		}
+
+		/// <inheritdoc cref="IDieRoller.Information"/>
+		public override string Information => $"MersenneTwister 19937 ([source](https://github.com/cmdwtf/NumberStones/blob/main/Source/Random/MersenneTwister19937.cs))";
 	}
 }

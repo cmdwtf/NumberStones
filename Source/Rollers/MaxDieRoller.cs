@@ -16,5 +16,8 @@
 		/// The difference between a minimum and maximum roll is always 0, as the roll is fixed.
 		/// </summary>
 		public long Range => 0;
+
+		/// <inheritdoc cref="IDieRoller.Information"/>
+		public string Information => $"{nameof(MaxDieRoller)}: Forces minimum dice roll.";
 	}
 }
