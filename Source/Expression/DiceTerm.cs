@@ -143,7 +143,7 @@ namespace cmdwtf.NumberStones.Expression
 
 			return new MultipleDiceTermResult(results)
 			{
-				TermType = $"{Multiplicity}{Constants.DiceSeperator}{Sides}"
+				TermType = $"{Multiplicity}{Constants.DiceSeperator}{Settings.SidesString}"
 			};
 		}
 

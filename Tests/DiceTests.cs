@@ -89,6 +89,7 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("8dC", 0, 8)]
 		[DataRow("8dC", 0, 8)]
 		[DataRow("8dC", 0, 8)]
+		[DataRow("8 + 8dC", 8, 16)]
 		public void CoinDiceRollInRange(string input, int low, int high)
 			=> DiceRangeRoll(input, low, high);
 
@@ -100,6 +101,7 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("8dF", -8, 8)]
 		[DataRow("8dF", -8, 8)]
 		[DataRow("8dF", -8, 8)]
+		[DataRow("8 + 8dF", 0, 16)]
 		public void FudgeDiceRollInRange(string input, int low, int high)
 			=> DiceRangeRoll(input, low, high);
 
@@ -111,6 +113,7 @@ namespace cmdwtf.NumberStones.Tests
 		[DataRow("8dP", 0, 0)]
 		[DataRow("8dP", 0, 0)]
 		[DataRow("8dP", 0, 0)]
+		[DataRow("8 + 8dP", 8, 8)]
 		public void PlanarDiceRollInRange(string input, int low, int high)
 			=> DiceRangeRoll(input, low, high);
 
