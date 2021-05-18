@@ -15,6 +15,8 @@ namespace cmdwtf.NumberStones.Expression
 	/// </summary>
 	public class DiceBoolean
 	{
+		private static SortedList<byte, DiceBoolean> Values { get; } = new();
+
 		/// <summary>
 		/// The default value. Indicating the absense of true or false,
 		/// this value is used to show that the given <see cref="DiceBoolean"/>
@@ -38,8 +40,6 @@ namespace cmdwtf.NumberStones.Expression
 		private const byte _trueValue = 1;
 		private const byte _falseValue = 2;
 		private const byte _indeterminateValue = 3;
-
-		private static SortedList<byte, DiceBoolean> Values { get; } = new();
 
 		private byte Value { get; init; }
 
