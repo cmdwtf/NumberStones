@@ -3,10 +3,11 @@
 namespace cmdwtf.NumberStones.Expression
 {
 	/// <summary>
-	/// An enumeration in class form representing the three states a "boolean" value may be
+	/// An enumeration in class form representing the four states a "boolean" value may be
 	/// in a dice result: True and False are self explanatory. Unset is used
 	/// as a default value to show that the status isn't a failure, but instead
-	/// wasn't checked at all.
+	/// wasn't checked at all. Indeterminate indicates that the value being checked represents
+	/// a response where some of the details being described are made up of conflicting parts.
 	///
 	/// Is this overkill? You betcha. But I like it a bit better than an enum,
 	/// and it's "safer" than a nullable bool.
@@ -27,18 +28,24 @@ namespace cmdwtf.NumberStones.Expression
 		/// The falsy value
 		/// </summary>
 		public static DiceBoolean False { get; } = new DiceBoolean(_falseValue);
+		/// <summary>
+		/// The value that represents a state made where components represented hold conflicting values.
+		/// </summary>
+		public static DiceBoolean Indeterminate { get; } = new DiceBoolean(_indeterminateValue);
 
 		private const byte _unsetValue = 0;
 		private const byte _trueValue = 1;
 		private const byte _falseValue = 2;
+		private const byte _indeterminateValue = 3;
 
 		private static SortedList<byte, DiceBoolean> Values { get; } = new();
 
 		private byte Value { get; init; }
 
-		private DiceBoolean(byte value = _unsetValue)
+		private DiceBoolean(byte value)
 		{
 			Value = value;
+			Values.Add(value, this);
 		}
 
 		public static implicit operator bool(DiceBoolean value)
@@ -69,6 +76,7 @@ namespace cmdwtf.NumberStones.Expression
 				_unsetValue => "unset",
 				_trueValue => "true",
 				_falseValue => "false",
+				_indeterminateValue => "indeterminate",
 				_ => "error"
 			};
 	}
