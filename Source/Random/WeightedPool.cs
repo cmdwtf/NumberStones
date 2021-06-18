@@ -26,11 +26,11 @@ namespace cmdwtf.NumberStones.Random
 		public int Count => _pool.Count;
 
 		/// <summary>
-		/// Construct a new weighted pool using the default random number generator provided with .NET
+		/// Construct a new weighted pool using the default random number generator
 		/// This constructor does not take a clone function so Choose() cannot be called, only Draw()
 		/// </summary>
 		public WeightedPool()
-		   : this(Instances.DotNet)
+		   : this(Instances.DefaultRandom)
 		{
 		}
 

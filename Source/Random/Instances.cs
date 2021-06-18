@@ -7,9 +7,13 @@ namespace cmdwtf.NumberStones.Random
 	public static class Instances
 	{
 		/// <summary>
+		/// The default random number generator to use. Currently the <see cref="Mt19937"/> PRNG.
+		/// </summary>
+		public static IRandom DefaultRandom => Mt19937;
+
+		/// <summary>
 		/// A random number generator based on the <see cref="System.Random"/> RNG.
 		/// </summary>
-		/// CA2104 is thrown incorrectly on this line. Singleton.DefaultRandom is immutable.
 		public static IRandom DotNet { get; } = new DotNetRandom();
 
 		/// <summary>
